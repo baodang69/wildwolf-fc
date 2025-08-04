@@ -3,8 +3,14 @@ import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 
+export enum UserRole {
+  USER = 'USER',
+  ADMIN = 'ADMIN',
+  MANAGER = 'MANAGER',
+}
+
 @Schema({
-  timestamps: true, // Tự động thêm createdAt và updatedAt
+  timestamps: true,
 })
 export class User {
   @Prop({ required: true })
@@ -19,8 +25,11 @@ export class User {
   @Prop({ required: true })
   phone: string;
 
-  @Prop({ default: 'user' })
-  role: string;
+  @Prop({
+    enum: UserRole,
+    default: UserRole.USER,
+  })
+  role: UserRole;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

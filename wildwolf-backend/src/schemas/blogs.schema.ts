@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type BlogDocument = Blog & Document;
 
@@ -16,14 +16,11 @@ export class Blog {
   @Prop({ required: true })
   title: string;
 
-  @Prop({ required: true })
-  author: ObjectId;
+  @Prop({ type: Types.ObjectId, ref: 'users', required: true })
+  author: Types.ObjectId;
 
   @Prop({ required: true })
   coverimage: string;
-
-  @Prop({ required: true })
-  createdAt: Date;
 
   @Prop({ default: 0 })
   like: number;
