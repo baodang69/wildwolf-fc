@@ -1,25 +1,22 @@
-'use client';
+"use client";
 
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Box, CircularProgress, Typography } from '@mui/material';
-import { useAuth } from '../../contexts/AuthContext';
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Box, CircularProgress, Typography } from "@mui/material";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface AuthGuardProps {
   children: React.ReactNode;
   fallback?: React.ReactNode;
 }
 
-export const AuthGuard: React.FC<AuthGuardProps> = ({ 
-  children, 
-  fallback 
-}) => {
+export const AuthGuard: React.FC<AuthGuardProps> = ({ children, fallback }) => {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push('/auth');
+      router.push("/login");
     }
   }, [isAuthenticated, isLoading, router]);
 

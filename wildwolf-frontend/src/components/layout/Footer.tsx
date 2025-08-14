@@ -37,9 +37,9 @@ export const Footer: React.FC = () => {
               </Typography>
             </Box>
             <Typography variant="body2" sx={{ color: "#cccccc", mb: 2 }}>
-              Câu lạc bộ bóng đá WildWolf FC - Nơi hội tụ đam mê và tài năng.
-              Chúng tôi cam kết mang đến những trận đấu hấp dẫn và tinh thần thể
-              thao cao.
+              Câu lạc bộ bóng đá WildWolf FC - Nơi hội tụ đam mê bóng đá. Chúng
+              tôi cam kết mang đến những trận đấu hấp dẫn và tinh thần thể thao
+              cao.
             </Typography>
           </Box>
 

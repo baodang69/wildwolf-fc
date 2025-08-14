@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "../contexts/AuthContext";
 import { ThemeProvider } from "../components/providers/ThemeProvider";
+import { LayoutWrapper } from "../components/layout/LayoutWrapper";
 
 export const metadata: Metadata = {
   title: "WildWolf FC",
@@ -17,7 +18,8 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <AuthProvider>
-            {children}</AuthProvider>
+            <LayoutWrapper>{children}</LayoutWrapper>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

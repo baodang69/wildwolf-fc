@@ -56,7 +56,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     const success = await login(email, password);
     if (success) {
       onSuccess?.();
-      router.push("/"); // Chuyển hướng về trang chủ
+      router.push("/"); 
     } else {
       setError("Email hoặc mật khẩu không đúng");
     }
@@ -84,7 +84,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     >
       <CardContent sx={{ p: 4 }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-          {/* Logo FC */}
           <Box sx={{ mb: 2 }}>
             <Image
               src="/logo-fc/wildwolf.jpeg"
