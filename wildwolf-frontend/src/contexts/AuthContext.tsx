@@ -1,12 +1,19 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+// import * as authApi from "../api/auth";
 
 interface User {
   id: string;
   email: string;
   name: string;
-  role?: string;
+  role: string;
 }
 
 interface AuthContextType {
@@ -31,16 +38,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const checkAuth = () => {
       try {
-        const token = localStorage.getItem('authToken');
-        const userData = localStorage.getItem('userData');
-        
+        const token = localStorage.getItem("authToken");
+        const userData = localStorage.getItem("userData");
+
         if (token && userData) {
           setUser(JSON.parse(userData));
         }
       } catch (error) {
-        console.error('Lỗi khi kiểm tra authentication:', error);
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('userData');
+        console.error("Lỗi khi kiểm tra authentication:", error);
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("userData");
       } finally {
         setIsLoading(false);
       }
@@ -52,30 +59,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     try {
-      // Giả lập API call - thay thế bằng API thực tế của bạn
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      // Mock login - thay thế bằng API thực tế sau
+      if (email === "admin@wildwolf.com" && password === "admin123") {
+        const userData = {
+          id: "1",
+          email: email,
+          name: "Admin",
+          role: "admin",
+        };
+        const token = "mock-jwt-token";
 
-      if (response.ok) {
-        const data = await response.json();
-        const { token, user: userData } = data;
-        
         // Lưu token và user data
-        localStorage.setItem('authToken', token);
-        localStorage.setItem('userData', JSON.stringify(userData));
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("userData", JSON.stringify(userData));
         setUser(userData);
-        
+
         return true;
       } else {
         return false;
       }
     } catch (error) {
-      console.error('Lỗi đăng nhập:', error);
+      console.error("Lỗi đăng nhập:", error);
       return false;
     } finally {
       setIsLoading(false);
@@ -83,8 +87,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userData");
     setUser(null);
   };
 
@@ -96,17 +100,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isAuthenticated: !!user,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth phải được sử dụng trong AuthProvider');
+    throw new Error("useAuth phải được sử dụng trong AuthProvider");
   }
   return context;
 };

@@ -1,27 +1,42 @@
 "use client";
 
 import React from "react";
-import { Container, Box, Typography, Card, CardContent } from "@mui/material";
-import { Header } from "../components/layout/Header";
+import {
+  Container,
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Button,
+} from "@mui/material";
+import { Layout } from "../components/layout/Layout";
 import { useAuth } from "../contexts/AuthContext";
+import { Sports, Group, CalendarToday, Article } from "@mui/icons-material";
+import Link from "next/link";
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
 
   return (
-    <Box>
-      <Header />
-
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Layout>
+      <Container maxWidth="lg">
         {isAuthenticated ? (
           <Box>
             <Typography variant="h3" component="h1" gutterBottom>
               Chào mừng trở lại, {user?.name}!
             </Typography>
 
-            <Box sx={{ mt: 2 }}>
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, mb: 3 }}>
-                <Box sx={{ flex: "1 1 300px", minWidth: 300 }}>
+            <Box
+              sx={{ display: "flex", flexDirection: "column", gap: 3, mt: 2 }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: { xs: "column", md: "row" },
+                  gap: 3,
+                }}
+              >
+                <Box sx={{ flex: 1 }}>
                   <Card>
                     <CardContent>
                       <Typography variant="h5" component="h2" gutterBottom>
@@ -37,7 +52,7 @@ export default function Home() {
                   </Card>
                 </Box>
 
-                <Box sx={{ flex: "1 1 300px", minWidth: 300 }}>
+                <Box sx={{ flex: 1 }}>
                   <Card>
                     <CardContent>
                       <Typography variant="h5" component="h2" gutterBottom>
@@ -51,40 +66,110 @@ export default function Home() {
                 </Box>
               </Box>
 
-              <Box sx={{ width: "100%" }}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h5" component="h2" gutterBottom>
-                      Thông báo
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Chào mừng bạn đến với hệ thống quản lý WildWolf FC!
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Box>
+              <Card>
+                <CardContent>
+                  <Typography variant="h5" component="h2" gutterBottom>
+                    Thông báo
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Chào mừng bạn đến với hệ thống quản lý WildWolf FC!
+                  </Typography>
+                </CardContent>
+              </Card>
             </Box>
           </Box>
         ) : (
-          <Box sx={{ textAlign: "center", py: 8 }}>
-            <Typography variant="h2" component="h1" gutterBottom>
-              Chào mừng đến với WildWolf FC
-            </Typography>
-            <Typography variant="h5" color="text.secondary" sx={{ mb: 2 }}>
-              Câu lạc bộ bóng đá chuyên nghiệp
-            </Typography>
-            <Typography
-              variant="body1"
-              color="text.secondary"
-              sx={{ maxWidth: 600, mx: "auto" }}
+          <Box>
+            {/* Hero Section */}
+            <Box sx={{ textAlign: "center", py: 8, mb: 6 }}>
+              <Typography variant="h2" component="h1" gutterBottom>
+                Chào mừng đến với WildWolf FC
+              </Typography>
+              <Typography variant="h5" color="text.secondary" sx={{ mb: 4 }}>
+                Câu lạc bộ bóng đá chuyên nghiệp
+              </Typography>
+              <Typography
+                variant="body1"
+                color="text.secondary"
+                sx={{ maxWidth: 600, mx: "auto", mb: 4 }}
+              >
+                Tham gia cùng chúng tôi để trải nghiệm những trận đấu hấp dẫn và
+                kết nối với cộng đồng yêu bóng đá.
+              </Typography>
+              <Link href="/auth" style={{ textDecoration: "none" }}>
+                <Button variant="contained" size="large">
+                  Đăng nhập ngay
+                </Button>
+              </Link>
+            </Box>
+
+            {/* Features Section */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "1fr",
+                  sm: "repeat(2, 1fr)",
+                  md: "repeat(4, 1fr)",
+                },
+                gap: 4,
+              }}
             >
-              Tham gia cùng chúng tôi để trải nghiệm những trận đấu hấp dẫn và
-              kết nối với cộng đồng yêu bóng đá. Đăng nhập để truy cập đầy đủ
-              các tính năng.
-            </Typography>
+              <Card sx={{ textAlign: "center", p: 2 }}>
+                <CardContent>
+                  <Group sx={{ fontSize: 48, color: "primary.main", mb: 2 }} />
+                  <Typography variant="h6" gutterBottom>
+                    Thành viên
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Khám phá đội hình và thông tin các cầu thủ
+                  </Typography>
+                </CardContent>
+              </Card>
+
+              <Card sx={{ textAlign: "center", p: 2 }}>
+                <CardContent>
+                  <CalendarToday
+                    sx={{ fontSize: 48, color: "primary.main", mb: 2 }}
+                  />
+                  <Typography variant="h6" gutterBottom>
+                    Trận đấu
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Lịch thi đấu và kết quả các trận đấu
+                  </Typography>
+                </CardContent>
+              </Card>
+
+              <Card sx={{ textAlign: "center", p: 2 }}>
+                <CardContent>
+                  <Article
+                    sx={{ fontSize: 48, color: "primary.main", mb: 2 }}
+                  />
+                  <Typography variant="h6" gutterBottom>
+                    Tin tức
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Cập nhật tin tức mới nhất về câu lạc bộ
+                  </Typography>
+                </CardContent>
+              </Card>
+
+              <Card sx={{ textAlign: "center", p: 2 }}>
+                <CardContent>
+                  <Sports sx={{ fontSize: 48, color: "primary.main", mb: 2 }} />
+                  <Typography variant="h6" gutterBottom>
+                    Thư viện
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Hình ảnh và video các hoạt động
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Box>
           </Box>
         )}
       </Container>
-    </Box>
+    </Layout>
   );
 }
