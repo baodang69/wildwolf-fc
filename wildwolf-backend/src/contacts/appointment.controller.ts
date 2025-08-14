@@ -10,18 +10,18 @@ import {
   HttpStatus,
   Query,
 } from '@nestjs/common';
-import { ContactsService } from './contacts.service';
+import { ApointmentsService } from './appointment.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { AppointmentStatus } from '../schemas/contacts.schema';
 
 @Controller('contacts')
 export class ContactsController {
-  constructor(private readonly contactsService: ContactsService) {}
+  constructor(private readonly apointmentsService: ApointmentsService) {}
 
   @Post()
   async create(@Body() createAppointmentDto: CreateAppointmentDto) {
     try {
-      return await this.contactsService.create(createAppointmentDto);
+      return await this.apointmentsService.create(createAppointmentDto);
     } catch (error) {
       throw new HttpException(
         'Không thể tạo lịch hẹn: ' + error.message,
@@ -39,16 +39,16 @@ export class ContactsController {
   ) {
     try {
       if (opponentId) {
-        return await this.contactsService.findByOpponent(opponentId);
+        return await this.apointmentsService.findByOpponent(opponentId);
       }
-      
+
       if (startDate && endDate) {
         const start = new Date(startDate);
         const end = new Date(endDate);
-        return await this.contactsService.findByDateRange(start, end);
+        return await this.apointmentsService.findByDateRange(start, end);
       }
-      
-      return await this.contactsService.findAll(status);
+
+      return await this.apointmentsService.findAll(status);
     } catch (error) {
       throw new HttpException(
         'Không thể lấy danh sách lịch hẹn: ' + error.message,
@@ -60,7 +60,7 @@ export class ContactsController {
   @Get('stats')
   async getStats() {
     try {
-      return await this.contactsService.getAppointmentStats();
+      return await this.apointmentsService.getAppointmentStats();
     } catch (error) {
       throw new HttpException(
         'Không thể lấy thống kê lịch hẹn: ' + error.message,
@@ -73,7 +73,7 @@ export class ContactsController {
   async getUpcoming(@Query('days') days?: string) {
     try {
       const daysNumber = days ? parseInt(days) : 7;
-      return await this.contactsService.getUpcomingAppointments(daysNumber);
+      return await this.apointmentsService.getUpcomingAppointments(daysNumber);
     } catch (error) {
       throw new HttpException(
         'Không thể lấy lịch hẹn sắp tới: ' + error.message,
@@ -85,7 +85,7 @@ export class ContactsController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
-      const appointment = await this.contactsService.findOne(id);
+      const appointment = await this.apointmentsService.findOne(id);
       if (!appointment) {
         throw new HttpException('Lịch hẹn không tồn tại', HttpStatus.NOT_FOUND);
       }
@@ -104,15 +104,19 @@ export class ContactsController {
     @Body() updateAppointmentDto: Partial<CreateAppointmentDto>,
   ) {
     try {
-      const appointment = await this.contactsService.update(id, updateAppointmentDto);
+      const appointment = await this.apointmentsService.update(
+        id,
+        updateAppointmentDto,
+      );
       if (!appointment) {
         throw new HttpException('Lịch hẹn không tồn tại', HttpStatus.NOT_FOUND);
       }
       return {
-        message: updateAppointmentDto.status === AppointmentStatus.CONFIRMED 
-          ? 'Xác nhận lịch hẹn thành công và đã tạo trận đấu tự động'
-          : 'Cập nhật lịch hẹn thành công',
-        appointment
+        message:
+          updateAppointmentDto.status === AppointmentStatus.CONFIRMED
+            ? 'Xác nhận lịch hẹn thành công và đã tạo trận đấu tự động'
+            : 'Cập nhật lịch hẹn thành công',
+        appointment,
       };
     } catch (error) {
       throw new HttpException(
@@ -128,15 +132,19 @@ export class ContactsController {
     @Body('status') status: AppointmentStatus,
   ) {
     try {
-      const appointment = await this.contactsService.updateStatus(id, status);
+      const appointment = await this.apointmentsService.updateStatus(
+        id,
+        status,
+      );
       if (!appointment) {
         throw new HttpException('Lịch hẹn không tồn tại', HttpStatus.NOT_FOUND);
       }
       return {
-        message: status === AppointmentStatus.CONFIRMED 
-          ? 'Xác nhận lịch hẹn thành công và đã tạo trận đấu tự động'
-          : 'Cập nhật trạng thái lịch hẹn thành công',
-        appointment
+        message:
+          status === AppointmentStatus.CONFIRMED
+            ? 'Xác nhận lịch hẹn thành công và đã tạo trận đấu tự động'
+            : 'Cập nhật trạng thái lịch hẹn thành công',
+        appointment,
       };
     } catch (error) {
       throw new HttpException(
@@ -149,13 +157,16 @@ export class ContactsController {
   @Patch(':id/confirm')
   async confirmAppointment(@Param('id') id: string) {
     try {
-      const appointment = await this.contactsService.updateStatus(id, AppointmentStatus.CONFIRMED);
+      const appointment = await this.apointmentsService.updateStatus(
+        id,
+        AppointmentStatus.CONFIRMED,
+      );
       if (!appointment) {
         throw new HttpException('Lịch hẹn không tồn tại', HttpStatus.NOT_FOUND);
       }
       return {
         message: 'Xác nhận lịch hẹn thành công và đã tạo trận đấu tự động',
-        appointment
+        appointment,
       };
     } catch (error) {
       throw new HttpException(
@@ -168,13 +179,16 @@ export class ContactsController {
   @Patch(':id/cancel')
   async cancelAppointment(@Param('id') id: string) {
     try {
-      const appointment = await this.contactsService.updateStatus(id, AppointmentStatus.CANCELLED);
+      const appointment = await this.apointmentsService.updateStatus(
+        id,
+        AppointmentStatus.CANCELLED,
+      );
       if (!appointment) {
         throw new HttpException('Lịch hẹn không tồn tại', HttpStatus.NOT_FOUND);
       }
       return {
         message: 'Hủy lịch hẹn thành công',
-        appointment
+        appointment,
       };
     } catch (error) {
       throw new HttpException(
@@ -187,7 +201,7 @@ export class ContactsController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {
-      const appointment = await this.contactsService.remove(id);
+      const appointment = await this.apointmentsService.remove(id);
       if (!appointment) {
         throw new HttpException('Lịch hẹn không tồn tại', HttpStatus.NOT_FOUND);
       }

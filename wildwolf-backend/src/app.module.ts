@@ -7,7 +7,7 @@ import { UsersModule } from './users/users.module';
 import { MatchesModule } from './matches/matches.module';
 import { BlogsModule } from './blogs/blogs.module';
 import { MembersModule } from './members/members.module';
-import { ContactsModule } from './contacts/contacts.module';
+import { ContactsModule } from './contacts/appointment.module';
 import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
 
@@ -16,9 +16,7 @@ import { UploadModule } from './upload/upload.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot(
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/wildwolf-fc',
-    ),
+    MongooseModule.forRoot(process.env.MONGODB_URI || ''),
     UsersModule,
     MatchesModule,
     BlogsModule,

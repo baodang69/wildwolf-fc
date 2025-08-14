@@ -48,7 +48,7 @@ export class Match {
   @Prop({ required: true })
   stadium: string;
 
-  @Prop({ required: true })
+  @Prop({ default: '' })
   opponent_avatar: string;
 
   @Prop({ type: [OpponentScorerSchema], default: [] })

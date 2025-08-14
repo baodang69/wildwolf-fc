@@ -1,18 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Appointment, AppointmentDocument, AppointmentStatus } from '../schemas/contacts.schema';
+import {
+  Appointment,
+  AppointmentDocument,
+  AppointmentStatus,
+} from '../schemas/contacts.schema';
 import { Match, MatchDocument, Status } from '../schemas/matches.schema';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 
 @Injectable()
-export class ContactsService {
+export class ApointmentsService {
   constructor(
-    @InjectModel(Appointment.name) private appointmentModel: Model<AppointmentDocument>,
+    @InjectModel(Appointment.name)
+    private appointmentModel: Model<AppointmentDocument>,
     @InjectModel(Match.name) private matchModel: Model<MatchDocument>,
   ) {}
 
-  async create(createAppointmentDto: CreateAppointmentDto): Promise<Appointment> {
+  async create(
+    createAppointmentDto: CreateAppointmentDto,
+  ): Promise<Appointment> {
     const createdAppointment = new this.appointmentModel(createAppointmentDto);
     return createdAppointment.save();
   }
@@ -41,7 +48,10 @@ export class ContactsService {
       .exec();
   }
 
-  async findByDateRange(startDate: Date, endDate: Date): Promise<Appointment[]> {
+  async findByDateRange(
+    startDate: Date,
+    endDate: Date,
+  ): Promise<Appointment[]> {
     return this.appointmentModel
       .find({
         appointmenttime: {
@@ -54,15 +64,19 @@ export class ContactsService {
       .exec();
   }
 
-  async update(id: string, updateData: Partial<CreateAppointmentDto>): Promise<Appointment | null> {
+  async update(
+    id: string,
+    updateData: Partial<CreateAppointmentDto>,
+  ): Promise<Appointment | null> {
     const appointment = await this.appointmentModel.findById(id);
     if (!appointment) {
       return null;
     }
 
     // Kiểm tra nếu status thay đổi thành CONFIRMED
-    const isConfirming = updateData.status === AppointmentStatus.CONFIRMED && 
-                        appointment.status !== AppointmentStatus.CONFIRMED;
+    const isConfirming =
+      updateData.status === AppointmentStatus.CONFIRMED &&
+      appointment.status !== AppointmentStatus.CONFIRMED;
 
     const updatedAppointment = await this.appointmentModel
       .findByIdAndUpdate(id, updateData, { new: true })
@@ -81,15 +95,19 @@ export class ContactsService {
     return this.appointmentModel.findByIdAndDelete(id).exec();
   }
 
-  async updateStatus(id: string, status: AppointmentStatus): Promise<Appointment | null> {
+  async updateStatus(
+    id: string,
+    status: AppointmentStatus,
+  ): Promise<Appointment | null> {
     const appointment = await this.appointmentModel.findById(id);
     if (!appointment) {
       return null;
     }
 
     // Kiểm tra nếu status thay đổi thành CONFIRMED
-    const isConfirming = status === AppointmentStatus.CONFIRMED && 
-                        appointment.status !== AppointmentStatus.CONFIRMED;
+    const isConfirming =
+      status === AppointmentStatus.CONFIRMED &&
+      appointment.status !== AppointmentStatus.CONFIRMED;
 
     const updatedAppointment = await this.appointmentModel
       .findByIdAndUpdate(id, { status }, { new: true })
@@ -104,10 +122,12 @@ export class ContactsService {
     return updatedAppointment;
   }
 
-  private async createMatchFromAppointment(appointment: Appointment): Promise<Match> {
+  private async createMatchFromAppointment(
+    appointment: Appointment,
+  ): Promise<Match> {
     // Lấy thông tin opponent đã được populate
     const opponent = appointment.opponent as any;
-    
+
     const matchData = {
       opponent: opponent.club || opponent.fullname || 'Đội bóng khách',
       our_scorer: [], // Mảng rỗng ban đầu
@@ -131,9 +151,9 @@ export class ContactsService {
       {
         $group: {
           _id: '$status',
-          count: { $sum: 1 }
-        }
-      }
+          count: { $sum: 1 },
+        },
+      },
     ]);
 
     const totalStats = await this.appointmentModel.aggregate([
@@ -143,21 +163,21 @@ export class ContactsService {
           totalAppointments: { $sum: 1 },
           pending: {
             $sum: {
-              $cond: [{ $eq: ['$status', AppointmentStatus.PENDING] }, 1, 0]
-            }
+              $cond: [{ $eq: ['$status', AppointmentStatus.PENDING] }, 1, 0],
+            },
           },
           confirmed: {
             $sum: {
-              $cond: [{ $eq: ['$status', AppointmentStatus.CONFIRMED] }, 1, 0]
-            }
+              $cond: [{ $eq: ['$status', AppointmentStatus.CONFIRMED] }, 1, 0],
+            },
           },
           cancelled: {
             $sum: {
-              $cond: [{ $eq: ['$status', AppointmentStatus.CANCELLED] }, 1, 0]
-            }
-          }
-        }
-      }
+              $cond: [{ $eq: ['$status', AppointmentStatus.CANCELLED] }, 1, 0],
+            },
+          },
+        },
+      },
     ]);
 
     return {
@@ -166,8 +186,8 @@ export class ContactsService {
         totalAppointments: 0,
         pending: 0,
         confirmed: 0,
-        cancelled: 0
-      }
+        cancelled: 0,
+      },
     };
   }
 
@@ -182,7 +202,7 @@ export class ContactsService {
           $gte: now,
           $lte: futureDate,
         },
-        status: { $ne: AppointmentStatus.CANCELLED }
+        status: { $ne: AppointmentStatus.CANCELLED },
       })
       .populate('opponent', 'fullname email phone club')
       .sort({ appointmenttime: 1 })
