@@ -8,6 +8,7 @@ import { MatchesModule } from './matches/matches.module';
 import { BlogsModule } from './blogs/blogs.module';
 import { MembersModule } from './members/members.module';
 import { ContactsModule } from './contacts/contacts.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ContactsModule } from './contacts/contacts.module';
     BlogsModule,
     MembersModule,
     ContactsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

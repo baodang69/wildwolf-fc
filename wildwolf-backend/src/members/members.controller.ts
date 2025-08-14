@@ -12,7 +12,11 @@ import {
 } from '@nestjs/common';
 import { MembersService } from './members.service';
 import { CreateMemberDto } from './dto/create-member.dto';
-import { MemberStatus, MemberPosition, MemberRole } from '../schemas/members.schema';
+import {
+  MemberStatus,
+  MemberPosition,
+  MemberRole,
+} from '../schemas/members.schema';
 
 @Controller('members')
 export class MembersController {
@@ -42,7 +46,7 @@ export class MembersController {
         const member = await this.membersService.findByNumber(parseInt(number));
         return member ? [member] : [];
       }
-      
+
       return await this.membersService.findAll(status, position, role);
     } catch (error) {
       throw new HttpException(
@@ -105,7 +109,10 @@ export class MembersController {
     try {
       const member = await this.membersService.findOne(id);
       if (!member) {
-        throw new HttpException('Thành viên không tồn tại', HttpStatus.NOT_FOUND);
+        throw new HttpException(
+          'Thành viên không tồn tại',
+          HttpStatus.NOT_FOUND,
+        );
       }
       return member;
     } catch (error) {
@@ -119,12 +126,15 @@ export class MembersController {
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateMemberDto: Partial<CreateMemberDto>,
+    @Body() updateMemberDto: CreateMemberDto,
   ) {
     try {
       const member = await this.membersService.update(id, updateMemberDto);
       if (!member) {
-        throw new HttpException('Thành viên không tồn tại', HttpStatus.NOT_FOUND);
+        throw new HttpException(
+          'Thành viên không tồn tại',
+          HttpStatus.NOT_FOUND,
+        );
       }
       return member;
     } catch (error) {
@@ -143,7 +153,10 @@ export class MembersController {
     try {
       const member = await this.membersService.updateStatus(id, status);
       if (!member) {
-        throw new HttpException('Thành viên không tồn tại', HttpStatus.NOT_FOUND);
+        throw new HttpException(
+          'Thành viên không tồn tại',
+          HttpStatus.NOT_FOUND,
+        );
       }
       return member;
     } catch (error) {
@@ -159,7 +172,10 @@ export class MembersController {
     try {
       const member = await this.membersService.remove(id);
       if (!member) {
-        throw new HttpException('Thành viên không tồn tại', HttpStatus.NOT_FOUND);
+        throw new HttpException(
+          'Thành viên không tồn tại',
+          HttpStatus.NOT_FOUND,
+        );
       }
       return { message: 'Xóa thành viên thành công', member };
     } catch (error) {

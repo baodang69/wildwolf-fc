@@ -1,18 +1,30 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Member, MemberDocument, MemberStatus, MemberPosition, MemberRole } from '../schemas/members.schema';
+import {
+  Member,
+  MemberDocument,
+  MemberStatus,
+  MemberPosition,
+  MemberRole,
+} from '../schemas/members.schema';
 import { CreateMemberDto } from './dto/create-member.dto';
 
 @Injectable()
 export class MembersService {
-  constructor(@InjectModel(Member.name) private memberModel: Model<MemberDocument>) {}
+  constructor(
+    @InjectModel(Member.name) private memberModel: Model<MemberDocument>,
+  ) {}
 
   async create(createMemberDto: CreateMemberDto): Promise<Member> {
     // Kiểm tra số áo đã tồn tại chưa
-    const existingMember = await this.memberModel.findOne({ number: createMemberDto.number });
+    const existingMember = await this.memberModel.findOne({
+      number: createMemberDto.number,
+    });
     if (existingMember) {
-      throw new ConflictException(`Số áo ${createMemberDto.number} đã được sử dụng`);
+      throw new ConflictException(
+        `Số áo ${createMemberDto.number} đã được sử dụng`,
+      );
     }
 
     const createdMember = new this.memberModel(createMemberDto);
@@ -22,10 +34,10 @@ export class MembersService {
   async findAll(
     status?: MemberStatus,
     position?: MemberPosition,
-    role?: MemberRole
+    role?: MemberRole,
   ): Promise<Member[]> {
     const filter: any = {};
-    
+
     if (status) filter.status = status;
     if (position) filter.position = position;
     if (role) filter.role = role;
@@ -58,15 +70,20 @@ export class MembersService {
       .exec();
   }
 
-  async update(id: string, updateData: Partial<CreateMemberDto>): Promise<Member | null> {
+  async update(
+    id: string,
+    updateData: CreateMemberDto,
+  ): Promise<Member | null> {
     // Nếu cập nhật số áo, kiểm tra trùng lặp
     if (updateData.number) {
-      const existingMember = await this.memberModel.findOne({ 
+      const existingMember = await this.memberModel.findOne({
         number: updateData.number,
-        _id: { $ne: id }
+        _id: { $ne: id },
       });
       if (existingMember) {
-        throw new ConflictException(`Số áo ${updateData.number} đã được sử dụng`);
+        throw new ConflictException(
+          `Số áo ${updateData.number} đã được sử dụng`,
+        );
       }
     }
 
@@ -93,16 +110,16 @@ export class MembersService {
           count: { $sum: 1 },
           playing: {
             $sum: {
-              $cond: [{ $eq: ['$status', MemberStatus.PLAYING] }, 1, 0]
-            }
+              $cond: [{ $eq: ['$status', MemberStatus.PLAYING] }, 1, 0],
+            },
           },
           injured: {
             $sum: {
-              $cond: [{ $eq: ['$status', MemberStatus.INJURED] }, 1, 0]
-            }
-          }
-        }
-      }
+              $cond: [{ $eq: ['$status', MemberStatus.INJURED] }, 1, 0],
+            },
+          },
+        },
+      },
     ]);
 
     const totalStats = await this.memberModel.aggregate([
@@ -112,26 +129,26 @@ export class MembersService {
           totalMembers: { $sum: 1 },
           totalPlaying: {
             $sum: {
-              $cond: [{ $eq: ['$status', MemberStatus.PLAYING] }, 1, 0]
-            }
+              $cond: [{ $eq: ['$status', MemberStatus.PLAYING] }, 1, 0],
+            },
           },
           totalInjured: {
             $sum: {
-              $cond: [{ $eq: ['$status', MemberStatus.INJURED] }, 1, 0]
-            }
+              $cond: [{ $eq: ['$status', MemberStatus.INJURED] }, 1, 0],
+            },
           },
           captains: {
             $sum: {
-              $cond: [{ $eq: ['$role', MemberRole.CAPTAIN] }, 1, 0]
-            }
+              $cond: [{ $eq: ['$role', MemberRole.CAPTAIN] }, 1, 0],
+            },
           },
           viceCaptains: {
             $sum: {
-              $cond: [{ $eq: ['$role', MemberRole.VICE_CAPTAIN] }, 1, 0]
-            }
-          }
-        }
-      }
+              $cond: [{ $eq: ['$role', MemberRole.VICE_CAPTAIN] }, 1, 0],
+            },
+          },
+        },
+      },
     ]);
 
     return {
@@ -141,14 +158,14 @@ export class MembersService {
         totalPlaying: 0,
         totalInjured: 0,
         captains: 0,
-        viceCaptains: 0
-      }
+        viceCaptains: 0,
+      },
     };
   }
 
   async getAvailableNumbers(): Promise<number[]> {
     const usedNumbers = await this.memberModel.distinct('number');
     const allNumbers = Array.from({ length: 99 }, (_, i) => i + 1);
-    return allNumbers.filter(num => !usedNumbers.includes(num));
+    return allNumbers.filter((num) => !usedNumbers.includes(num));
   }
 }

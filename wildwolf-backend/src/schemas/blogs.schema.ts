@@ -4,7 +4,7 @@ import { Document, Types } from 'mongoose';
 export type BlogDocument = Blog & Document;
 
 @Schema({
-  timestamps: true, // Tự động thêm createdAt và updatedAt
+  timestamps: true,
 })
 export class Blog {
   @Prop({ required: true })

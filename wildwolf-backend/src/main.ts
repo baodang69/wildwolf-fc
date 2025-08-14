@@ -5,8 +5,17 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  //Validation Pippe
-  app.useGlobalPipes(new ValidationPipe());
+  //Validation Pipe
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true, // Chỉ cho phép các property được định nghĩa trong DTO
+      forbidNonWhitelisted: true, // Throw error nếu có property không được định nghĩa
+      transform: true, // Tự động transform type
+      transformOptions: {
+        enableImplicitConversion: true, // Tự động convert type
+      },
+    }),
+  );
   // Enable CORS
   app.enableCors();
 

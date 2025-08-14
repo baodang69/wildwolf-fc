@@ -1,5 +1,17 @@
-import { IsString, IsNumber, IsEnum, IsDateString, IsOptional, Min, Max } from 'class-validator';
-import { MemberStatus, MemberPosition, MemberRole } from '../../schemas/members.schema';
+import {
+  IsString,
+  IsNumber,
+  IsEnum,
+  IsDateString,
+  IsOptional,
+  Min,
+  Max,
+} from 'class-validator';
+import {
+  MemberStatus,
+  MemberPosition,
+  MemberRole,
+} from '../../schemas/members.schema';
 
 export class CreateMemberDto {
   @IsString()
@@ -20,14 +32,20 @@ export class CreateMemberDto {
   summary: string;
 
   @IsOptional()
-  @IsEnum(MemberRole)
+  @IsEnum(MemberRole, {
+    message: `role phải là một trong các giá trị: ${Object.values(MemberRole).join(', ')}`,
+  })
   role?: MemberRole;
 
   @IsOptional()
-  @IsEnum(MemberPosition)
+  @IsEnum(MemberPosition, {
+    message: `position phải là một trong các giá trị: ${Object.values(MemberPosition).join(', ')}`,
+  })
   position?: MemberPosition;
 
   @IsOptional()
-  @IsEnum(MemberStatus)
+  @IsEnum(MemberStatus, {
+    message: `status phải là một trong các giá trị: ${Object.values(MemberStatus).join(', ')}`,
+  })
   status?: MemberStatus;
 }
