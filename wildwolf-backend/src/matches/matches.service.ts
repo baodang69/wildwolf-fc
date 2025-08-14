@@ -3,10 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Match, MatchDocument, Status } from '../schemas/matches.schema';
 import { CreateMatchDto } from './dto/create-match.dto';
+import { CreateMatchWithImagesDto } from './dto/create-match-with-images.dto';
+import { v2 as cloudinary } from 'cloudinary';
 
 @Injectable()
 export class MatchesService {
-  constructor(@InjectModel(Match.name) private matchModel: Model<MatchDocument>) {}
+  constructor(
+    @InjectModel(Match.name) private matchModel: Model<MatchDocument>,
+  ) {}
 
   async create(createMatchDto: CreateMatchDto): Promise<Match> {
     const createdMatch = new this.matchModel(createMatchDto);
@@ -50,7 +54,10 @@ export class MatchesService {
       .exec();
   }
 
-  async update(id: string, updateData: Partial<CreateMatchDto>): Promise<Match | null> {
+  async update(
+    id: string,
+    updateData: Partial<CreateMatchDto>,
+  ): Promise<Match | null> {
     return this.matchModel
       .findByIdAndUpdate(id, updateData, { new: true })
       .populate('our_scorer.id', 'fullname')
@@ -71,7 +78,7 @@ export class MatchesService {
   async getMatchStats(): Promise<any> {
     const stats = await this.matchModel.aggregate([
       {
-        $match: { status: Status.FINISH }
+        $match: { status: Status.FINISH },
       },
       {
         $group: {
@@ -79,32 +86,147 @@ export class MatchesService {
           totalMatches: { $sum: 1 },
           totalWins: {
             $sum: {
-              $cond: [{ $gt: ['$our_goal', '$opponent_goal'] }, 1, 0]
-            }
+              $cond: [{ $gt: ['$our_goal', '$opponent_goal'] }, 1, 0],
+            },
           },
           totalDraws: {
             $sum: {
-              $cond: [{ $eq: ['$our_goal', '$opponent_goal'] }, 1, 0]
-            }
+              $cond: [{ $eq: ['$our_goal', '$opponent_goal'] }, 1, 0],
+            },
           },
           totalLosses: {
             $sum: {
-              $cond: [{ $lt: ['$our_goal', '$opponent_goal'] }, 1, 0]
-            }
+              $cond: [{ $lt: ['$our_goal', '$opponent_goal'] }, 1, 0],
+            },
           },
           totalGoalsScored: { $sum: '$our_goal' },
-          totalGoalsConceded: { $sum: '$opponent_goal' }
-        }
-      }
+          totalGoalsConceded: { $sum: '$opponent_goal' },
+        },
+      },
     ]);
 
-    return stats[0] || {
-      totalMatches: 0,
-      totalWins: 0,
-      totalDraws: 0,
-      totalLosses: 0,
-      totalGoalsScored: 0,
-      totalGoalsConceded: 0
+    return (
+      stats[0] || {
+        totalMatches: 0,
+        totalWins: 0,
+        totalDraws: 0,
+        totalLosses: 0,
+        totalGoalsScored: 0,
+        totalGoalsConceded: 0,
+      }
+    );
+  }
+
+  // Upload ảnh cho match đã tồn tại
+  async uploadImages(
+    matchId: string,
+    files: Express.Multer.File[],
+  ): Promise<any> {
+    if (!files || files.length === 0) {
+      throw new Error('Không có file nào được upload');
+    }
+
+    // Upload ảnh lên Cloudinary
+    const uploadPromises = files.map((file) => {
+      return new Promise((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream(
+            {
+              resource_type: 'image',
+              folder: 'wildwolf/matches',
+              transformation: [
+                { width: 1200, height: 800, crop: 'limit' },
+                { quality: 'auto' },
+              ],
+            },
+            (error, result) => {
+              if (error) reject(error);
+              else resolve(result?.secure_url);
+            },
+          )
+          .end(file.buffer);
+      });
+    });
+
+    const imageUrls = await Promise.all(uploadPromises);
+
+    // Cập nhật match với URLs ảnh mới
+    const updatedMatch = await this.matchModel
+      .findByIdAndUpdate(
+        matchId,
+        { $push: { images: { $each: imageUrls } } },
+        { new: true },
+      )
+      .populate('our_scorer.id', 'fullname')
+      .exec();
+
+    if (!updatedMatch) {
+      throw new Error('Không tìm thấy trận đấu');
+    }
+
+    return {
+      message: 'Upload ảnh thành công',
+      match: updatedMatch,
+      uploadedImages: imageUrls,
+    };
+  }
+
+  // Tạo match với upload ảnh cùng lúc
+  async createWithImages(
+    createMatchDto: CreateMatchWithImagesDto,
+    files: Express.Multer.File[],
+  ): Promise<any> {
+    let imageUrls: string[] = [];
+
+    // Upload ảnh nếu có
+    if (files && files.length > 0) {
+      const uploadPromises = files.map((file) => {
+        return new Promise((resolve, reject) => {
+          cloudinary.uploader
+            .upload_stream(
+              {
+                resource_type: 'image',
+                folder: 'wildwolf/matches',
+                transformation: [
+                  { width: 1200, height: 800, crop: 'limit' },
+                  { quality: 'auto' },
+                ],
+              },
+              (error, result) => {
+                if (error) reject(error);
+                else resolve(result?.secure_url);
+              },
+            )
+            .end(file.buffer);
+        });
+      });
+
+      imageUrls = (await Promise.all(uploadPromises)) as string[];
+    }
+
+    // Tạo match data
+    const matchData = {
+      ...createMatchDto,
+      images: imageUrls,
+      our_scorer: createMatchDto.our_scorer || [],
+      opponent_scorer: createMatchDto.opponent_scorer || [],
+      status: createMatchDto.status || Status.COMING_SOON,
+    };
+
+    // Tạo match
+    const createdMatch = new this.matchModel(matchData);
+    const savedMatch = await createdMatch.save();
+
+    // Populate và return
+    const populatedMatch = await this.matchModel
+      .findById(savedMatch._id)
+      .populate('our_scorer.id', 'fullname')
+      .exec();
+
+    return {
+      message: 'Tạo trận đấu với ảnh thành công',
+      match: populatedMatch,
+      uploadedImages: imageUrls,
     };
   }
 }

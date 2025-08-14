@@ -15,7 +15,9 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) {
+    console.log('JWT_SECRET:', process.env.JWT_SECRET); // Debug
+  }
 
   async register(registerDto: RegisterDto) {
     const existingUser = await this.usersService.findByEmail(registerDto.email);

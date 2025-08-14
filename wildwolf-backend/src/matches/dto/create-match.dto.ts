@@ -1,4 +1,14 @@
-import { IsString, IsNumber, IsArray, IsEnum, IsDateString, IsOptional, ValidateNested, IsMongoId, Min } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsArray,
+  IsEnum,
+  IsDateString,
+  IsOptional,
+  ValidateNested,
+  IsMongoId,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { Status } from '../../schemas/matches.schema';
 

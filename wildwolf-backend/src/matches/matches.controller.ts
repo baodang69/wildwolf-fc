@@ -9,9 +9,13 @@ import {
   HttpException,
   HttpStatus,
   Query,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { MatchesService } from './matches.service';
 import { CreateMatchDto } from './dto/create-match.dto';
+import { CreateMatchWithImagesDto } from './dto/create-match-with-images.dto';
 import { Status } from '../schemas/matches.schema';
 
 @Controller('matches')
@@ -41,13 +45,13 @@ export class MatchesController {
       if (opponent) {
         return await this.matchesService.findByOpponent(opponent);
       }
-      
+
       if (startDate && endDate) {
         const start = new Date(startDate);
         const end = new Date(endDate);
         return await this.matchesService.findByDateRange(start, end);
       }
-      
+
       return await this.matchesService.findAll(status);
     } catch (error) {
       throw new HttpException(
@@ -105,10 +109,7 @@ export class MatchesController {
   }
 
   @Patch(':id/status')
-  async updateStatus(
-    @Param('id') id: string,
-    @Body('status') status: Status,
-  ) {
+  async updateStatus(@Param('id') id: string, @Body('status') status: Status) {
     try {
       const match = await this.matchesService.updateStatus(id, status);
       if (!match) {
@@ -134,6 +135,43 @@ export class MatchesController {
     } catch (error) {
       throw new HttpException(
         'Không thể xóa trận đấu: ' + error.message,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Post(':id/upload-images')
+  @UseInterceptors(FilesInterceptor('images', 10)) // Tối đa 10 ảnh
+  async uploadImages(
+    @Param('id') id: string,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    try {
+      const result = await this.matchesService.uploadImages(id, files);
+      return result;
+    } catch (error) {
+      throw new HttpException(
+        'Không thể upload ảnh: ' + error.message,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Post('create-with-images')
+  @UseInterceptors(FilesInterceptor('images', 10))
+  async createWithImages(
+    @Body() createMatchDto: CreateMatchWithImagesDto,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    try {
+      const result = await this.matchesService.createWithImages(
+        createMatchDto,
+        files,
+      );
+      return result;
+    } catch (error) {
+      throw new HttpException(
+        'Không thể tạo trận đấu với ảnh: ' + error.message,
         HttpStatus.BAD_REQUEST,
       );
     }
