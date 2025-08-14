@@ -12,6 +12,7 @@ import {
 import { useAuth } from "../contexts/AuthContext";
 import { Sports, Group, CalendarToday, Article } from "@mui/icons-material";
 import Link from "next/link";
+import { HeroCarousel } from "../components/home/HeroCarousel";
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
@@ -76,14 +77,12 @@ export default function Home() {
         </Box>
       ) : (
         <Box>
+          <h1>Trang chủ</h1>
+          {/* Hero Carousel */}
+          <HeroCarousel />
+
           {/* Hero Section */}
-          <Box sx={{ textAlign: "center", py: 8, mb: 6 }}>
-            <Typography variant="h2" component="h1" gutterBottom>
-              Chào mừng đến với WildWolf FC
-            </Typography>
-            <Typography variant="h5" color="text.secondary" sx={{ mb: 4 }}>
-              Câu lạc bộ bóng đá chuyên nghiệp
-            </Typography>
+          <Box sx={{ textAlign: "center", py: 6, mb: 6 }}>
             <Typography
               variant="body1"
               color="text.secondary"
@@ -92,7 +91,7 @@ export default function Home() {
               Tham gia cùng chúng tôi để trải nghiệm những trận đấu hấp dẫn và
               kết nối với cộng đồng yêu bóng đá.
             </Typography>
-            <Link href="/auth" style={{ textDecoration: "none" }}>
+            <Link href="/login" style={{ textDecoration: "none" }}>
               <Button variant="contained" size="large">
                 Đăng nhập ngay
               </Button>
