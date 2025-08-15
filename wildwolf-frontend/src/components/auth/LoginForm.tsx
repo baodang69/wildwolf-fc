@@ -56,7 +56,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     const success = await login(email, password);
     if (success) {
       onSuccess?.();
-      router.push("/"); 
+      router.push("/");
     } else {
       setError("Email hoặc mật khẩu không đúng");
     }
@@ -205,9 +205,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 sx={{
                   borderColor: "#db4437",
                   color: "#db4437",
+                  borderWidth: "1px",
                   "&:hover": {
                     borderColor: "#db4437",
                     backgroundColor: "rgba(219, 68, 55, 0.04)",
+                    transform: "none",
+                    boxShadow: "none",
+                  },
+                  "&::before": {
+                    display: "none",
+                  },
+                  "&:active": {
+                    transform: "none",
                   },
                 }}
               >
@@ -223,9 +232,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 sx={{
                   borderColor: "#4267B2",
                   color: "#4267B2",
+                  borderWidth: "1px",
                   "&:hover": {
                     borderColor: "#4267B2",
                     backgroundColor: "rgba(66, 103, 178, 0.04)",
+                    transform: "none",
+                    boxShadow: "none",
+                  },
+                  "&::before": {
+                    display: "none",
+                  },
+                  "&:active": {
+                    transform: "none",
                   },
                 }}
               >
@@ -239,14 +257,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
               fullWidth
               variant="text"
               disabled={isLoading}
-              sx={{
-                color: "primary.main",
-                textDecoration: "none",
-                mt: 1,
-                "&:hover": {
-                  backgroundColor: "rgba(0, 0, 0, 0.04)",
-                },
-              }}
+              sx={{ mt: 1 }}
             >
               Chưa có tài khoản? Đăng ký
             </Button>

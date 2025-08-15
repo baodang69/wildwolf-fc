@@ -114,20 +114,92 @@ const theme = createTheme({
           borderRadius: 8,
           textTransform: "none",
           fontWeight: 500,
+          position: "relative",
+          overflow: "hidden",
+          transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          "&:hover": {
+            transform: "translateY(-2px)",
+            boxShadow: "0 8px 25px rgba(0, 0, 0, 0.15)",
+          },
+          "&:active": {
+            transform: "translateY(0)",
+            transition: "all 0.1s cubic-bezier(0.4, 0, 0.2, 1)",
+          },
+          // Ripple effect enhancement
+          "& .MuiTouchRipple-root": {
+            color: "rgba(255, 255, 255, 0.3)",
+          },
+          // Subtle shine effect
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: "-100%",
+            width: "100%",
+            height: "100%",
+            background:
+              "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)",
+            transition: "left 0.5s",
+          },
+          "&:hover::before": {
+            left: "100%",
+          },
         },
         contained: {
           backgroundColor: "#000000",
           color: "#ffffff",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
           "&:hover": {
             backgroundColor: "#333333",
+            transform: "translateY(-2px)",
+            boxShadow: "0 8px 25px rgba(0, 0, 0, 0.25)",
+          },
+          "&:active": {
+            backgroundColor: "#000000",
+            transform: "translateY(0)",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
           },
         },
         outlined: {
           borderColor: "#000000",
           color: "#000000",
+          borderWidth: "2px",
+          position: "relative",
+          overflow: "hidden",
+          zIndex: 1,
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: "-100%",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "#000000",
+            transition: "left 0.3s ease-in-out",
+            zIndex: -1,
+          },
           "&:hover": {
-            borderColor: "#333333",
+            borderColor: "#000000",
+            color: "#ffffff",
+            transform: "translateY(-2px)",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+            borderWidth: "2px",
+          },
+          "&:hover::before": {
+            left: 0,
+          },
+          "&:active": {
+            transform: "translateY(0)",
+          },
+        },
+        text: {
+          "&:hover": {
             backgroundColor: "rgba(0, 0, 0, 0.04)",
+            transform: "translateY(-1px)",
+          },
+          "&:active": {
+            backgroundColor: "rgba(0, 0, 0, 0.08)",
+            transform: "translateY(0)",
           },
         },
       },

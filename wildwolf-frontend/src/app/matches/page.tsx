@@ -1,12 +1,66 @@
 import { Container } from "@mui/material";
-import NextBreadcrumbs from "@/components/layout/Breadcrumb";
+import NextBreadcrumbs from "@/components/ui/Breadcrumb";
+import { MatchesCard } from "@/components/matches/MatchesCard";
 
 export default function MatchesPage() {
+  const matches = [
+    {
+      _id: "1",
+      date: "2024-12-31T17:00:00.000+00:00",
+      opponent: "FC Number One",
+      stadium: "Dam Hong 1",
+      summary: "Một trận đấu tốt của anh em",
+      status: "FINISH",
+      images: [""], // mảng chứa 1 chuỗi rỗng
+      opponent_avatar: "",
+      opponent_goal: 2,
+      opponent_scorer: [
+        {
+          name: "Vu Duy Phong",
+          number_of_goal: 1,
+        },
+      ],
+      our_goal: 2,
+      our_scorer: [
+        {
+          name: "Hieu Banana",
+          number_of_goal: 2,
+          id: "688dcf064b55fa24969315c4",
+        },
+      ],
+    },
+    {
+      _id: "2",
+      date: "2024-12-31T17:00:00.000+00:00",
+      opponent: "FC Number One",
+      stadium: "Dam Hong 1",
+      summary: "Một trận đấu tốt của anh em",
+      status: "FINISH",
+      images: [""], // mảng chứa 1 chuỗi rỗng
+      opponent_avatar: "",
+      opponent_goal: 1,
+      opponent_scorer: [
+        {
+          name: "Vu Duy Phong",
+          number_of_goal: 1,
+        },
+      ],
+      our_goal: 2,
+      our_scorer: [
+        {
+          name: "Hieu Banana",
+          number_of_goal: 2,
+          id: "688dcf064b55fa24969315c4",
+        },
+      ],
+    },
+  ];
+
   return (
     <Container maxWidth="lg">
       <NextBreadcrumbs />
-      <h1>Matches page</h1>
-      <p>Chưa có nội dung</p>
+      <h1>Lịch thi đấu & Kết quả</h1>
+      <MatchesCard matchesData={matches} />
     </Container>
   );
 }

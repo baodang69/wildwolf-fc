@@ -3,12 +3,12 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper/modules";
+import { Pagination, Autoplay } from "swiper/modules";
 import Image from "next/image";
 
 // Import Swiper styles
 import "swiper/css";
-import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 interface CarouselSlide {
   id: number;
@@ -55,95 +55,119 @@ export const HeroCarousel: React.FC = () => {
     <Box
       sx={{
         width: "100%",
+        maxWidth: "100%",
+        overflow: "hidden",
+        mb: 0,
       }}
     >
-      <Box sx={{ width: "100%", mx: "auto", px: 0 }}>
-        <Swiper
-          slidesPerView={1}
-          spaceBetween={0}
-          navigation={true}
-          autoplay={{
-            delay: 4000,
-            disableOnInteraction: false,
-          }}
-          loop={true}
-          modules={[Navigation, Autoplay]}
-          className="hero-swiper"
-          style={{
-            paddingTop: "20px",
-            paddingBottom: "20px",
-            width: "100%",
-          }}
-        >
-          {slides.map((slide) => (
-            <SwiperSlide key={slide.id}>
-              <Box
-                sx={{
-                  position: "relative",
-                  width: "100%",
-                  height: "600px",
-                  borderRadius: "12px",
-                  overflow: "hidden",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: "translateY(-5px)",
-                  },
+      <Swiper
+        slidesPerView={1}
+        spaceBetween={0}
+        pagination={{
+          clickable: true,
+          dynamicBullets: true,
+        }}
+        autoplay={{
+          delay: 4000,
+          disableOnInteraction: false,
+        }}
+        loop={true}
+        modules={[Pagination, Autoplay]}
+        className="hero-swiper"
+        style={{
+          width: "100%",
+          height: "auto",
+        }}
+      >
+        {slides.map((slide) => (
+          <SwiperSlide key={slide.id}>
+            <Box
+              sx={{
+                position: "relative",
+                width: "100%",
+                height: "60vh",
+                overflow: "hidden",
+                cursor: "pointer",
+              }}
+              className="carousel-box"
+            >
+              <Image
+                src={slide.image}
+                alt={slide.title}
+                fill
+                style={{
+                  objectFit: "cover",
                 }}
-              >
-                <Image
-                  src={slide.image}
-                  alt={slide.title}
-                  fill
-                  style={{
-                    objectFit: "cover",
-                  }}
-                />
-              </Box>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </Box>
+              />
+            </Box>
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
       {/* Custom CSS cho Swiper */}
       <style jsx global>{`
         .hero-swiper {
           position: relative;
+          width: 100%;
+          margin: 0 auto;
         }
 
         .hero-swiper .swiper-slide {
-          transition: all 0.3s ease;
+          width: 100%;
+          height: auto;
         }
 
-        .hero-swiper .swiper-button-next,
-        .hero-swiper .swiper-button-prev {
-          color: #fff;
-          background: rgba(0, 0, 0, 0.5);
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          margin-top: -25px;
-          transition: all 0.3s ease;
+        .hero-swiper .swiper-slide img {
+          transition: all 0.5s ease;
+          border-radius: 12px;
+          width: 100%;
+          height: 100%; /* Cho ảnh full chiều cao Box chứa */
+          object-fit: cover;
         }
 
-        .hero-swiper .swiper-button-next:hover,
-        .hero-swiper .swiper-button-prev:hover {
-          background: rgba(0, 0, 0, 0.8);
+        .hero-swiper .swiper-slide-active img {
+          height: 500px;
+          width: 100%;
+        }
+
+        .hero-swiper .swiper-slide:not(.swiper-slide-active) img {
+          height: 350px;
+        }
+
+        /* Pagination Dots Styling */
+        .hero-swiper .swiper-pagination {
+          bottom: 15px !important;
+          left: 50% !important;
+          transform: translateX(-50%) !important;
+          width: auto !important;
+          position: absolute !important;
+          z-index: 10 !important;
+        }
+
+        .hero-swiper .swiper-pagination-bullet {
+          width: 12px;
+          height: 12px;
+          background: rgba(255, 255, 255, 0.5);
+          opacity: 1;
+          margin: 0 6px;
+          transition: all 0.3s ease;
+          border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .hero-swiper .swiper-pagination-bullet-active {
+          background: #fff;
+          transform: scale(1.2);
+          box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .hero-swiper .swiper-pagination-bullet:hover {
+          background: rgba(255, 255, 255, 0.8);
           transform: scale(1.1);
         }
 
-        .hero-swiper .swiper-button-next::after,
-        .hero-swiper .swiper-button-prev::after {
-          font-size: 18px;
-          font-weight: bold;
-        }
-
-        .hero-swiper .swiper-button-next {
-          right: 20px;
-        }
-
-        .hero-swiper .swiper-button-prev {
-          left: 20px;
+        /* Fade effect enhancement */
+        .hero-swiper .swiper-slide-active {
+          z-index: 1;
         }
       `}</style>
     </Box>

@@ -287,14 +287,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
               fullWidth
               variant="text"
               disabled={isLoading}
-              sx={{
-                color: "primary.main",
-                textDecoration: "none",
-                mt: 1,
-                "&:hover": {
-                  backgroundColor: "rgba(0, 0, 0, 0.04)",
-                },
-              }}
+              sx={{ mt: 1 }}
             >
               Đã có tài khoản? Đăng nhập
             </Button>

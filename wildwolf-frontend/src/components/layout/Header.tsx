@@ -20,7 +20,7 @@ export const Header: React.FC = () => {
   return (
     <AppBar
       position="static"
-      elevation={1}
+      elevation={0}
       sx={{
         backgroundColor: "white",
         color: "black",
@@ -63,7 +63,7 @@ export const Header: React.FC = () => {
                 href={item.href}
                 style={{ textDecoration: "none" }}
               >
-                <Button
+                <Typography
                   sx={{
                     color: "black",
                     position: "relative",
@@ -87,7 +87,7 @@ export const Header: React.FC = () => {
                   }}
                 >
                   {item.label}
-                </Button>
+                </Typography>
               </Link>
             ))}
 

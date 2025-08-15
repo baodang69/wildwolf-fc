@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import NextBreadcrumbs from "@/components/layout/Breadcrumb";
+import NextBreadcrumbs from "@/components/ui/Breadcrumb";
 
 export default function ContactPage() {
   return (

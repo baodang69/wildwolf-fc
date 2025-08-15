@@ -15,7 +15,7 @@ export const LayoutWrapper: React.FC<LayoutWrapperProps> = ({ children }) => {
 
   // Ẩn Header/Footer trên trang login và signup
   const isAuthPage =
-    pathname === "/login" || pathname === "/signup" || pathname === "/error";
+    pathname === "/login" || pathname === "/signup" || pathname === "/not-found";
 
   if (isAuthPage) {
     // Chỉ render children mà không có Header/Footer

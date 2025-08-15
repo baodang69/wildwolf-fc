@@ -3,6 +3,7 @@
 import React from "react";
 import { Box, Container, Typography, Link, Divider } from "@mui/material";
 import { Sports, Email, Phone, LocationOn } from "@mui/icons-material";
+import Image from "next/image";
 
 export const Footer: React.FC = () => {
   return (
@@ -28,7 +29,15 @@ export const Footer: React.FC = () => {
         >
           <Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
-              <Sports sx={{ color: "#ffffff" }} />
+              <Image
+                src="/logo-fc/wildwolf.jpeg"
+                alt="WildWolf FC Logo"
+                width={40}
+                height={40}
+                style={{
+                  borderRadius: "50%",
+                }}
+              />
               <Typography
                 variant="h6"
                 sx={{ fontWeight: 700, color: "#ffffff" }}
