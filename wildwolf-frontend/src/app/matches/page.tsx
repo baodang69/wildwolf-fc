@@ -23,9 +23,8 @@ export default function MatchesPage() {
       our_goal: 2,
       our_scorer: [
         {
-          name: "Hieu Banana",
+          fullname: "Hieu Banana",
           number_of_goal: 2,
-          id: "688dcf064b55fa24969315c4",
         },
       ],
     },
@@ -48,9 +47,8 @@ export default function MatchesPage() {
       our_goal: 2,
       our_scorer: [
         {
-          name: "Hieu Banana",
+          fullname: "Hieu Banana",
           number_of_goal: 2,
-          id: "688dcf064b55fa24969315c4",
         },
       ],
     },

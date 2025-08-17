@@ -22,9 +22,8 @@ type OpponentScorer = {
 };
 
 type OurScorer = {
-  name: string;
+  fullname: string;
   number_of_goal: number;
-  id?: string;
 };
 
 type Match = {
@@ -198,7 +197,7 @@ export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
                       (match.our_scorer ?? []).map((s, idx) => (
                         <ListItem key={idx}>
                           <ListItemText
-                            primary={`${s.name}`}
+                            primary={`${s.fullname}`}
                             secondary={`Số bàn: ${s.number_of_goal ?? 0}`}
                           />
                         </ListItem>

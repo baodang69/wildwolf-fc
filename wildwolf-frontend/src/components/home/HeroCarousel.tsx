@@ -119,7 +119,6 @@ export const HeroCarousel: React.FC = () => {
 
         .hero-swiper .swiper-slide img {
           transition: all 0.5s ease;
-          border-radius: 12px;
           width: 100%;
           height: 100%; /* Cho ảnh full chiều cao Box chứa */
           object-fit: cover;

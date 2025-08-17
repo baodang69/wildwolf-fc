@@ -111,8 +111,8 @@ const blogs = [
 ];
 
 const size = {
-  height: "420px",
-  width: "300px",
+  height: "auto",
+  width: "auto",
 };
 
 const getCategoryColor = (category: string) => {
