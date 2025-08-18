@@ -16,6 +16,8 @@ import {
 } from "@mui/material";
 import Image from "next/image";
 import { MatchCardProps } from "./match.type";
+import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -136,9 +138,12 @@ export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
                 sx={{ mb: 1 }}
               >
                 <Chip label={match.status ?? "UNKNOWN"} color="primary" />
-                <Typography variant="body2">
-                  Sân: {match.stadium ?? "---"}
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                  <LocationOnIcon fontSize="small" />
+                  <Typography variant="body2">
+                    {match.stadium ?? "---"}
+                  </Typography>
+                </Box>
               </Stack>
 
               <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>
@@ -170,7 +175,19 @@ export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
                         <ListItem key={idx}>
                           <ListItemText
                             primary={`${s.fullname}`}
-                            secondary={`Số bàn: ${s.number_of_goal ?? 0}`}
+                            secondary={
+                              <Typography
+                                component="span"
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 0.5,
+                                }}
+                              >
+                                <SportsSoccerIcon fontSize="small" />
+                                {s.number_of_goal ?? 0}
+                              </Typography>
+                            }
                           />
                         </ListItem>
                       ))
@@ -192,7 +209,19 @@ export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
                         <ListItem key={idx}>
                           <ListItemText
                             primary={`${s.name}`}
-                            secondary={`Số bàn: ${s.number_of_goal ?? 0}`}
+                            secondary={
+                              <Typography
+                                component="span"
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 0.5,
+                                }}
+                              >
+                                <SportsSoccerIcon fontSize="small" />
+                                {s.number_of_goal ?? 0}
+                              </Typography>
+                            }
                           />
                         </ListItem>
                       ))
