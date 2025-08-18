@@ -1,38 +1,11 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import { Box, Avatar, Typography, Chip, Stack } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import Link from "next/link";
-
-type Author = {
-  _id: string;
-  fullname: string;
-  avatar: string;
-};
-
-type Blog = {
-  _id: string;
-  content: string;
-  summary: string;
-  title: string;
-  author: Author;
-  createdAt: string | Date;
-  like: number;
-  coverImage: string;
-  slug: string;
-  tags: string[];
-  hot: boolean;
-};
-
-type Size = {
-  width: number | string;
-  height: number | string;
-};
-
-type BlogCardProps = {
-  blog: Blog;
-  size: Size;
-};
+import { BlogCardProps } from "./blog.type";
 
 export const BlogCard: React.FC<BlogCardProps> = ({ blog, size }) => {
   return (
@@ -44,8 +17,9 @@ export const BlogCard: React.FC<BlogCardProps> = ({ blog, size }) => {
         flexDirection: "column",
         justifyContent: "flex-start",
         cursor: "pointer",
-        px: 1.5,
+        px: 0.5,
         py: 1,
+        marginBottom: 4,
         // targeted hover effects: cover and avatar separately
         "& img.cover": {
           transition: "transform 220ms ease, filter 220ms ease",
@@ -63,19 +37,26 @@ export const BlogCard: React.FC<BlogCardProps> = ({ blog, size }) => {
       }}
     >
       <Link href={`/blog/${blog._id}`} style={{ textDecoration: "none" }}>
-        <Image
-          className="cover"
-          src={blog.coverImage}
-          alt={blog.slug}
-          height={190}
-          width={350}
+        <div
           style={{
-            borderRadius: "20px",
-            objectFit: "cover",
-            display: "flex",
-            justifyContent: "center",
+            position: "relative",
+            width: "100%",
+            height: 200,
           }}
-        />
+        >
+          <Image
+            className="cover"
+            fill
+            src={blog.coverImage}
+            alt={blog.slug}
+            style={{
+              borderRadius: "20px",
+              objectFit: "cover",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          />
+        </div>
       </Link>
 
       <Box sx={{ display: "flex", gap: 1, paddingY: 1, flexWrap: "wrap" }}>

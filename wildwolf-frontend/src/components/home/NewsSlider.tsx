@@ -192,7 +192,7 @@ export const NewsSlider: React.FC = () => {
           }}
         >
           {blogs.map((bl) => (
-            <SwiperSlide key={bl._id}>
+            <SwiperSlide key={bl._id} style={{ alignSelf: "flex-start" }}>
               <BlogCard blog={bl} size={size}></BlogCard>
             </SwiperSlide>
           ))}

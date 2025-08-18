@@ -15,35 +15,7 @@ import {
   Stack,
 } from "@mui/material";
 import Image from "next/image";
-
-type OpponentScorer = {
-  name: string;
-  number_of_goal: number;
-};
-
-type OurScorer = {
-  fullname: string;
-  number_of_goal: number;
-};
-
-type Match = {
-  _id: string;
-  date: string | Date;
-  opponent: string;
-  stadium?: string;
-  summary?: string;
-  status?: string;
-  images?: string[];
-  opponent_avatar?: string;
-  opponent_goal?: number;
-  opponent_scorer?: OpponentScorer[];
-  our_goal?: number;
-  our_scorer?: OurScorer[];
-};
-
-type MatchCardProps = {
-  matchesData: Match[];
-};
+import { MatchCardProps } from "./match.type";
 
 export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
