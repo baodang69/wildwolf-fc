@@ -41,33 +41,35 @@ export default function MembersPage() {
 
   return (
     <Container maxWidth="lg">
-      <NextBreadcrumbs />
-      <h1>Đội bóng</h1>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "1fr",
-            md: "1fr 1fr",
-            lg: "1fr 1fr",
-          },
-          gap: 4,
-          height: "80vh",
-          alignItems: "stretch",
-          marginY: 5,
-        }}
-      >
-        <Box sx={{ height: "100%" }}>
-          <FootballField
-            players={players}
-            onPlayerClick={handlePlayerClick}
-            selectedPlayer={selectedPlayer}
-          />
+      <Container>
+        <NextBreadcrumbs />
+        <h1>Đội bóng</h1>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              md: "1fr 1fr",
+              lg: "1fr 1fr",
+            },
+            gap: 4,
+            height: "80vh",
+            alignItems: "stretch",
+            marginY: 5,
+          }}
+        >
+          <Box sx={{ height: "100%" }}>
+            <FootballField
+              players={players}
+              onPlayerClick={handlePlayerClick}
+              selectedPlayer={selectedPlayer}
+            />
+          </Box>
+          <Box sx={{ height: "100%" }}>
+            <MemberCard players={players} selectedPlayer={selectedPlayer} />
+          </Box>
         </Box>
-        <Box sx={{ height: "100%" }}>
-          <MemberCard players={players} selectedPlayer={selectedPlayer} />
-        </Box>
-      </Box>
+      </Container>
     </Container>
   );
 }

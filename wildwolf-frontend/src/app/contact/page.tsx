@@ -4,9 +4,11 @@ import NextBreadcrumbs from "@/components/ui/Breadcrumb";
 export default function ContactPage() {
   return (
     <Container maxWidth="lg">
-      <NextBreadcrumbs />
-      <h1>Contact page</h1>
-      <p>Chưa có nội dung</p>
+      <Container>
+        <NextBreadcrumbs />
+        <h1>Contact page</h1>
+        <p>Chưa có nội dung</p>
+      </Container>
     </Container>
   );
 }

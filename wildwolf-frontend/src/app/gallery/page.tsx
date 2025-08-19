@@ -4,9 +4,11 @@ import NextBreadcrumbs from "@/components/ui/Breadcrumb";
 export default function GalleryPage() {
   return (
     <Container maxWidth="lg">
-      <NextBreadcrumbs />
-      <h1>Gallery page</h1>
-      <p>Chưa có nội dung</p>
+      <Container>
+        <NextBreadcrumbs />
+        <h1>Gallery page</h1>
+        <p>Chưa có nội dung</p>
+      </Container>
     </Container>
   );
 }

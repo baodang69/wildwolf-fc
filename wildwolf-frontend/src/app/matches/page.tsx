@@ -56,9 +56,11 @@ export default function MatchesPage() {
 
   return (
     <Container maxWidth="lg">
-      <NextBreadcrumbs />
-      <h1>Lịch thi đấu & Kết quả</h1>
-      <MatchesCard matchesData={matches} />
+      <Container>
+        <NextBreadcrumbs />
+        <h1>Lịch thi đấu & Kết quả</h1>
+        <MatchesCard matchesData={matches} />
+      </Container>
     </Container>
   );
 }

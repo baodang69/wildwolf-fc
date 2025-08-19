@@ -9,9 +9,11 @@ export default function BlogDetailPage({
   const { slug } = params;
   return (
     <Container maxWidth="lg">
-      <NextBreadcrumbs />
-      <h1>Blog detail</h1>
-      <p>Đây là chỗ hiển thị blog detail số {slug}</p>
+      <Container>
+        <NextBreadcrumbs />
+        <h1>Blog detail</h1>
+        <p>Đây là chỗ hiển thị blog detail số {slug}</p>
+      </Container>
     </Container>
   );
 }

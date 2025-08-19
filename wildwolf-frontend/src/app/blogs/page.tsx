@@ -153,57 +153,61 @@ export default function BlogsPage() {
 
   return (
     <Container maxWidth="lg">
-      <NextBreadcrumbs />
-      <Box sx={{ display: "flex" }}>
-        <h1>Tin tức</h1>
-        <SearchInput width="200"></SearchInput>
-      </Box>
-      <Box sx={{ display: "flex", gap: 3, mt: 2 }}>
-        <Box sx={{ flex: "0 0 75%", display: "flex", flexDirection: "column" }}>
-          <HotBlogCard blog={blogHot} />
-          <Divider
-            orientation="horizontal"
-            variant="middle"
-            flexItem
-            sx={{ mt: 3 }}
-          />
+      <Container>
+        <NextBreadcrumbs />
+        <Box sx={{ display: "flex" }}>
+          <h1>Tin tức</h1>
+          <SearchInput width="200"></SearchInput>
+        </Box>
+        <Box sx={{ display: "flex", gap: 3, mt: 2 }}>
+          <Box
+            sx={{ flex: "0 0 75%", display: "flex", flexDirection: "column" }}
+          >
+            <HotBlogCard blog={blogHot} />
+            <Divider
+              orientation="horizontal"
+              variant="middle"
+              flexItem
+              sx={{ mt: 3 }}
+            />
+            <Box
+              sx={{
+                mt: 2,
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                gap: 2,
+              }}
+            >
+              {blogNews.map((b) => {
+                return (
+                  <BlogCard
+                    key={b._id}
+                    blog={b}
+                    size={{ width: "100%", height: "360px" }}
+                  />
+                );
+              })}
+            </Box>
+          </Box>
+
           <Box
             sx={{
-              mt: 2,
-              display: "grid",
-              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-              gap: 2,
+              flex: "0 0 25%",
+              position: "sticky",
+              top: 0,
+              alignSelf: "flex-start",
             }}
           >
-            {blogNews.map((b) => {
-              return (
-                <BlogCard
-                  key={b._id}
-                  blog={b}
-                  size={{ width: "100%", height: "360px" }}
-                />
-              );
-            })}
+            <Divider
+              variant="middle"
+              flexItem
+              orientation="vertical"
+              sx={{ marginX: 2 }}
+            />
+            <SideBar blog={siderblog} />
           </Box>
         </Box>
-
-        <Box
-          sx={{
-            flex: "0 0 25%",
-            position: "sticky",
-            top: 0,
-            alignSelf: "flex-start",
-          }}
-        >
-          <Divider
-            variant="middle"
-            flexItem
-            orientation="vertical"
-            sx={{ marginX: 2 }}
-          />
-          <SideBar blog={siderblog} />
-        </Box>
-      </Box>
+      </Container>
     </Container>
   );
 }

@@ -79,9 +79,11 @@ export default function Home() {
         </Box>
       ) : (
         <Box>
-          <h1>Trang chủ</h1>
-          {/* Hero Carousel */}
-          <HeroCarousel />
+          <Container maxWidth="lg">
+            <h1>Trang chủ</h1>
+            {/* Hero Carousel */}
+            <HeroCarousel />
+          </Container>
 
           {/* Match Schedule Section */}
           <MatchSchedule />

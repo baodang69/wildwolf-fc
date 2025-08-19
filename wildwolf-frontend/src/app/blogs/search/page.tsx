@@ -132,42 +132,46 @@ export default function SearchPage() {
 
   return (
     <Container maxWidth="lg">
-      <NextBreadcrumbs />
-      <h1>Kết quả:</h1>
-      <Box sx={{ display: "flex", gap: 3, mt: 2 }}>
-        <Box sx={{ flex: "0 0 75%", display: "flex", flexDirection: "column" }}>
-          <SearchInput width="100%"></SearchInput>
+      <Container>
+        <NextBreadcrumbs />
+        <h1>Kết quả:</h1>
+        <Box sx={{ display: "flex", gap: 3, mt: 2 }}>
+          <Box
+            sx={{ flex: "0 0 75%", display: "flex", flexDirection: "column" }}
+          >
+            <SearchInput width="100%"></SearchInput>
+            <Box
+              sx={{
+                mt: 2,
+                display: "grid",
+                gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                gap: 2,
+              }}
+            >
+              {blogNews.map((b) => {
+                return (
+                  <BlogCard
+                    key={b._id}
+                    blog={b}
+                    size={{ width: "100%", height: "360px" }}
+                  />
+                );
+              })}
+            </Box>
+          </Box>
+
           <Box
             sx={{
-              mt: 2,
-              display: "grid",
-              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
-              gap: 2,
+              flex: "0 0 25%",
+              position: "sticky",
+              top: 0,
+              alignSelf: "flex-start",
             }}
           >
-            {blogNews.map((b) => {
-              return (
-                <BlogCard
-                  key={b._id}
-                  blog={b}
-                  size={{ width: "100%", height: "360px" }}
-                />
-              );
-            })}
+            <SideBar blog={siderblog} />
           </Box>
         </Box>
-
-        <Box
-          sx={{
-            flex: "0 0 25%",
-            position: "sticky",
-            top: 0,
-            alignSelf: "flex-start",
-          }}
-        >
-          <SideBar blog={siderblog} />
-        </Box>
-      </Box>
+      </Container>
     </Container>
   );
 }
