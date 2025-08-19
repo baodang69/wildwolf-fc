@@ -137,7 +137,6 @@ export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
                 alignItems="center"
                 sx={{ mb: 1 }}
               >
-                <Chip label={match.status ?? "UNKNOWN"} color="primary" />
                 <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                   <LocationOnIcon fontSize="small" />
                   <Typography variant="body2">

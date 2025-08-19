@@ -23,15 +23,15 @@ export const SearchInput = ({ width }: { width: any }) => {
         marginLeft: "auto",
         width: width,
         "& .MuiOutlinedInput-root": {
-          borderRadius: "12px",
+          borderRadius: "20px",
           "& fieldset": {
-            borderWidth: 2,
+            borderWidth: 1,
           },
           "&:hover fieldset": {
-            borderWidth: 2,
+            borderWidth: 1,
           },
           "&.Mui-focused fieldset": {
-            borderWidth: 2,
+            borderWidth: 1,
           },
         },
       }}
