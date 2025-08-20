@@ -32,9 +32,9 @@ export const FootballField = ({
         alt="football-field"
         sx={{
           position: "absolute",
-          top: 0,
+          top: 110,
           transform: "rotate(90deg)",
-          height: "100%",
+          height: "70%",
           width: "auto",
           objectFit: "cover",
           zIndex: -1,
