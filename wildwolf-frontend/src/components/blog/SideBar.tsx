@@ -10,7 +10,7 @@ import {
   Divider,
 } from "@mui/material";
 import Link from "next/link";
-import { Blog, SiderBlogCardProps } from "./blog.type";
+import { Blog, SiderBlogCardProps } from "./type/blog.type";
 import { SiderBlogCard } from "./SiderBlogCard";
 
 const sample = [

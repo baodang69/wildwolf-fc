@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Box, Avatar, Typography, Chip, Stack } from "@mui/material";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import Link from "next/link";
-import { BlogCardProps } from "./blog.type";
+import { BlogCardProps } from "./type/blog.type";
 
 export const BlogCard: React.FC<BlogCardProps> = ({ blog, size }) => {
   return (

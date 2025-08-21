@@ -1,6 +1,6 @@
 // FootballField.tsx
 import { Box } from "@mui/material";
-import { PlayerCardProp } from "./member.type";
+import { PlayerCardProp } from "./type/member.type";
 import Image from "next/image";
 import { PlayerNode } from "./PlayerNode";
 
