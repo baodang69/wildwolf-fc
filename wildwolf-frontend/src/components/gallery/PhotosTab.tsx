@@ -39,6 +39,7 @@ export const PhotosTab = ({ photos }: PhotoCardProp) => {
             <img
               src={photo.src}
               alt={photo.title}
+              loading="lazy"
               style={{
                 width: "100%",
                 height: "200px",
