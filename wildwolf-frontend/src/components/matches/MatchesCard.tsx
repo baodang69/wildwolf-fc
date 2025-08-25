@@ -90,7 +90,6 @@ export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
                     {match.opponent_goal ?? 0}
                   </Typography>
                 </Box>
-                {/* Outcome chip: win/lose/draw shown inside the card */}
                 {(() => {
                   const outcome = resultHelper.compareResult(
                     match.our_goal ?? 0,
@@ -123,8 +122,18 @@ export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
                     width={40}
                     height={40}
                     style={{ borderRadius: "50%" }}
+                    objectFit="cover"
                   />
-                ) : null}
+                ) : (
+                  <Image
+                    src={"/default_logo_club/default_logo_club.png"}
+                    alt={`${match.opponent} avatar`}
+                    width={40}
+                    height={40}
+                    style={{ borderRadius: "50%" }}
+                    objectFit="cover"
+                  />
+                )}
               </Box>
             </Box>
           </Card>
@@ -173,7 +182,7 @@ export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
                       (match.our_scorer ?? []).map((s, idx) => (
                         <ListItem key={idx}>
                           <ListItemText
-                            primary={`${s.fullname}`}
+                            primary={`${s.id.fullname}`}
                             secondary={
                               <Typography
                                 component="span"

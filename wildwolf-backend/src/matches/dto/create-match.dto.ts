@@ -13,9 +13,6 @@ import { Type } from 'class-transformer';
 import { Status } from '../../schemas/matches.schema';
 
 export class OurScorerDto {
-  @IsString()
-  name: string;
-
   @IsNumber()
   @Min(1)
   number_of_goal: number;

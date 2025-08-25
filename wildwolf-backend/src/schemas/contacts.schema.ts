@@ -11,11 +11,14 @@ export enum AppointmentStatus {
 
 @Schema({ timestamps: true })
 export class Appointment {
-  @Prop({ type: Types.ObjectId, ref: 'users', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   opponent: Types.ObjectId;
 
   @Prop({ required: true })
   appointmenttime: Date;
+
+  @Prop({})
+  opponent_logo: Date;
 
   @Prop({ required: true })
   stadium: string;

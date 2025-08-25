@@ -1,4 +1,10 @@
-import { IsString, IsMongoId, IsDateString, IsEnum, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsMongoId,
+  IsDateString,
+  IsEnum,
+  IsOptional,
+} from 'class-validator';
 import { AppointmentStatus } from '../../schemas/contacts.schema';
 
 export class CreateAppointmentDto {
@@ -10,6 +16,9 @@ export class CreateAppointmentDto {
 
   @IsString()
   stadium: string;
+
+  @IsString()
+  opponent_logo: string;
 
   @IsOptional()
   @IsString()

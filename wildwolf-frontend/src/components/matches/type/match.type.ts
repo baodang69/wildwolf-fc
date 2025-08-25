@@ -5,7 +5,9 @@ export type OpponentScorer = {
 };
 
 export type OurScorer = {
-  fullname: string;
+  id: {
+    fullname: string;
+  };
   number_of_goal: number;
 };
 

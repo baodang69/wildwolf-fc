@@ -24,13 +24,13 @@ export enum MemberRole {
 }
 
 @Schema({
-  timestamps: true, 
+  timestamps: true,
 })
 export class Member {
   @Prop({ required: true })
   fullname: string;
 
-  @Prop({ required: true })
+  @Prop({})
   avatar: string;
 
   @Prop({ required: true })

@@ -5,9 +5,6 @@ export type MatchDocument = Match & Document;
 
 @Schema({ _id: false })
 export class OurScorer {
-  @Prop({ required: true })
-  name: string;
-
   @Prop({ required: true, min: 1 })
   number_of_goal: number;
 

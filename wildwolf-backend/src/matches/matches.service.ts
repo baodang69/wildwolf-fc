@@ -21,7 +21,7 @@ export class MatchesService {
     const filter = status ? { status } : {};
     return this.matchModel
       .find(filter)
-      .populate('our_scorer.id', 'fullname')
+      .populate('our_scorer.id', 'fullname -_id')
       .sort({ date: -1 })
       .exec();
   }
@@ -29,14 +29,14 @@ export class MatchesService {
   async findOne(id: string): Promise<Match | null> {
     return this.matchModel
       .findById(id)
-      .populate('our_scorer.id', 'fullname')
+      .populate('our_scorer.id', 'fullname -_id')
       .exec();
   }
 
   async findByOpponent(opponent: string): Promise<Match[]> {
     return this.matchModel
       .find({ opponent: { $regex: opponent, $options: 'i' } })
-      .populate('our_scorer.id', 'fullname')
+      .populate('our_scorer.id', 'fullname -_id')
       .sort({ date: -1 })
       .exec();
   }
@@ -49,7 +49,7 @@ export class MatchesService {
           $lte: endDate,
         },
       })
-      .populate('our_scorer.id', 'fullname')
+      .populate('our_scorer.id', 'fullname -_id')
       .sort({ date: -1 })
       .exec();
   }
@@ -60,7 +60,7 @@ export class MatchesService {
   ): Promise<Match | null> {
     return this.matchModel
       .findByIdAndUpdate(id, updateData, { new: true })
-      .populate('our_scorer.id', 'fullname')
+      .populate('our_scorer.id', 'fullname -_id')
       .exec();
   }
 
@@ -71,7 +71,7 @@ export class MatchesService {
   async updateStatus(id: string, status: Status): Promise<Match | null> {
     return this.matchModel
       .findByIdAndUpdate(id, { status }, { new: true })
-      .populate('our_scorer.id', 'fullname')
+      .populate('our_scorer.id', 'fullname -_id')
       .exec();
   }
 
@@ -228,5 +228,5 @@ export class MatchesService {
       match: populatedMatch,
       uploadedImages: imageUrls,
     };
-  }
+  } 
 }
