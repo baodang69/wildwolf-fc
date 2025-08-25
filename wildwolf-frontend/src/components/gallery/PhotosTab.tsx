@@ -20,7 +20,7 @@ export const PhotosTab = ({ photos }: PhotoCardProp) => {
       {photos.map((photo) => (
         <Link
           key={photo.id}
-          href={`/gallery/photo/${photo.id}`}
+          href={`/galleries/photo/${photo.id}`}
           style={{ textDecoration: "none" }}
         >
           <Box

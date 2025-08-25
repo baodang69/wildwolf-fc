@@ -55,7 +55,7 @@ export const Header: React.FC = () => {
               { href: "/members", label: "Thành viên" },
               { href: "/matches", label: "Trận đấu" },
               { href: "/blogs", label: "Tin tức" },
-              { href: "/gallery", label: "Thư viện" },
+              { href: "/galleries", label: "Thư viện" },
               { href: "/contact", label: "Liên hệ" },
             ].map((item) => (
               <Link
