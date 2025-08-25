@@ -4,7 +4,6 @@ import {
   Box,
   Typography,
   FormControl,
-  OutlinedInput,
   TextField,
   Button,
   Avatar,
@@ -17,34 +16,29 @@ import {
   AccessTime,
   LocationOn,
 } from "@mui/icons-material";
-import Link from "next/link";
 import { useState, ChangeEvent, FormEvent } from "react";
-
-interface MatchRequestFormData {
-  teamName: string;
-  logo: string | null;
-  matchDate: string;
-  matchTime: string;
-  venue: string;
-  notes: string;
-}
+import { MatchRequestData, FormData } from "./type/contact.type";
+import React from "react";
+import createContacts from "../../api/contacts/index";
 
 interface ContactCardProps {
-  onSubmit?: (data: MatchRequestFormData) => void;
+  onSubmit?: (data: MatchRequestData) => void;
 }
 
 export const ContactCard: React.FC<ContactCardProps> = ({ onSubmit }) => {
-  const [formData, setFormData] = useState<MatchRequestFormData>({
-    teamName: "",
-    logo: null,
+  const [formData, setFormData] = useState<FormData>({
+    opponent_club: "",
+    opponent_logo: "",
     matchDate: "",
     matchTime: "",
-    venue: "",
-    notes: "",
+    stadium: "",
+    note: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleInputChange =
-    (field: keyof MatchRequestFormData) =>
+    (field: keyof FormData) =>
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setFormData({
         ...formData,
@@ -61,7 +55,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({ onSubmit }) => {
         if (typeof result === "string") {
           setFormData({
             ...formData,
-            logo: result,
+            opponent_logo: result,
           });
         }
       };
@@ -69,21 +63,60 @@ export const ContactCard: React.FC<ContactCardProps> = ({ onSubmit }) => {
     }
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     event.preventDefault();
 
     if (
-      !formData.teamName ||
+      !formData.opponent_club ||
       !formData.matchDate ||
       !formData.matchTime ||
-      !formData.venue
+      !formData.stadium
     ) {
       alert("Vui lòng điền đầy đủ thông tin bắt buộc!");
       return;
     }
 
-    if (onSubmit) {
-      onSubmit(formData);
+    setLoading(true);
+
+    try {
+      const combinedDateTime = new Date(
+        `${formData.matchDate}T${formData.matchTime}:00.000Z`
+      );
+
+      const apiData: MatchRequestData = {
+        opponent: "689034d352a3889955553985", // Hardcode
+        appointmenttime: combinedDateTime.toISOString(), // Hợp 2 field thành 1
+        stadium: formData.stadium,
+        opponent_club: formData.opponent_club,
+        opponent_logo: formData.opponent_logo || "", 
+        note: formData.note || "", 
+      };
+
+      console.log("Sending data to API:", apiData);
+
+      const result = await createContacts(apiData);
+      console.log("Contact created successfully:", result);
+
+      if (onSubmit) {
+        onSubmit(apiData);
+      }
+
+      alert("Gửi lời mời thành công!");
+      setFormData({
+        opponent_club: "",
+        opponent_logo: "",
+        matchDate: "",
+        matchTime: "",
+        stadium: "",
+        note: "",
+      });
+    } catch (error) {
+      console.error("Error creating contact:", error);
+      alert("Có lỗi xảy ra khi gửi lời mời!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -172,12 +205,9 @@ export const ContactCard: React.FC<ContactCardProps> = ({ onSubmit }) => {
                   label="Tên đội"
                   variant="outlined"
                   placeholder="Nhập tên đội của bạn"
-                  value={formData.teamName}
-                  onChange={handleInputChange("teamName")}
+                  value={formData.opponent_club}
+                  onChange={handleInputChange("opponent_club")}
                   required
-                  InputProps={{
-                    startAdornment: <Typography sx={{ mr: 1 }}></Typography>,
-                  }}
                 />
               </FormControl>
             </Box>
@@ -192,13 +222,13 @@ export const ContactCard: React.FC<ContactCardProps> = ({ onSubmit }) => {
                 }}
               >
                 <Avatar
-                  src={formData.logo || undefined}
+                  src={formData.opponent_logo || undefined}
                   sx={{
                     width: 60,
                     height: 60,
                     border: "2px dashed #ccc",
                   }}
-                ></Avatar>
+                />
                 <Box>
                   <Typography
                     variant="body2"
@@ -242,7 +272,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({ onSubmit }) => {
             <Box sx={{ flex: 1 }}>
               <FormControl fullWidth>
                 <TextField
-                  label="Lịch hẹn"
+                  label="Ngày hẹn"
                   type="date"
                   variant="outlined"
                   value={formData.matchDate}
@@ -281,33 +311,45 @@ export const ContactCard: React.FC<ContactCardProps> = ({ onSubmit }) => {
               </FormControl>
             </Box>
           </Box>
+
           <Box>
             <FormControl fullWidth>
               <TextField
                 label="Sân"
                 variant="outlined"
                 placeholder="Địa chỉ sân bóng"
-                value={formData.venue}
-                onChange={handleInputChange("venue")}
+                value={formData.stadium}
+                onChange={handleInputChange("stadium")}
                 required
+                InputProps={{
+                  startAdornment: <LocationOn sx={{ mr: 1, color: "#666" }} />,
+                }}
               />
             </FormControl>
           </Box>
+
           <Box>
             <FormControl fullWidth>
               <TextField
+                label="Ghi chú"
                 variant="outlined"
                 placeholder="Thêm ghi chú (tùy chọn)"
-                value={formData.notes}
-                onChange={handleInputChange("notes")}
+                value={formData.note}
+                onChange={handleInputChange("note")}
                 multiline
                 rows={4}
               />
             </FormControl>
           </Box>
+
           <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-            <Button type="submit" variant="outlined" size="large">
-              Gửi lời mời hẹn đối
+            <Button
+              type="submit"
+              variant="outlined"
+              size="large"
+              disabled={loading}
+            >
+              {loading ? "Đang gửi..." : "Gửi lời mời hẹn đối"}
             </Button>
           </Box>
         </Box>

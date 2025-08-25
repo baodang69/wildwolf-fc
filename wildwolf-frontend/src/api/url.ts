@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:8080";
+export const BASE_URL = "http://localhost:8080/";
 
 export const AUTH = {
   LOGIN: "auth/login",
@@ -14,4 +14,9 @@ export const MEMBERS = {
   ADD_MEMBERS: "members",
   AVAILABLE_NUMBER: "members/available-numbers",
   GET_BY_POSITION: "members/position/GK",
+};
+
+export const CONTACTS = {
+  GET_CONTACTS: "contacts",
+  CREATE_CONTACTS: "contacts",
 };

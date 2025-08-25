@@ -1,12 +1,17 @@
-interface MatchRequestFormData {
-  teamName: string;
-  logo: string | null;
-  matchDate: string;
-  matchTime: string;
-  venue: string;
-  notes: string;
+export interface MatchRequestData {
+  opponent: string;
+  appointmenttime: string;
+  stadium: string;
+  opponent_club: string;
+  opponent_logo?: string;
+  note?: string;
 }
 
-interface ContactCardProps {
-  onSubmit?: (data: MatchRequestFormData) => void;
+export interface FormData {
+  opponent_club: string;
+  opponent_logo: string;
+  matchDate: string;
+  matchTime: string; 
+  stadium: string;
+  note: string;
 }
