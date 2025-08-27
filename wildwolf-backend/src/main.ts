@@ -1,9 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(cookieParser());
 
   //Validation Pipe
   app.useGlobalPipes(
@@ -17,9 +20,12 @@ async function bootstrap() {
     }),
   );
   // Enable CORS
-  app.enableCors();
+  app.enableCors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000', // URL của frontend
+    credentials: true, // Cho phép gửi cookie
+  });
 
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 8080;
   await app.listen(port);
   console.log(`Application is running on: http://localhost:${port}`);
 }

@@ -26,6 +26,8 @@ import {
 } from "@mui/icons-material";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuth } from "../../contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
 interface SignupFormProps {
   onSuccess?: () => void;
@@ -37,7 +39,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({
   onSwitchToLogin,
 }) => {
   const [formData, setFormData] = useState({
-    name: "",
+    fullname: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -45,7 +47,8 @@ export const SignupForm: React.FC<SignupFormProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const { register, isLoading } = useAuth();
+  const router = useRouter();
 
   const handleChange =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,13 +63,8 @@ export const SignupForm: React.FC<SignupFormProps> = ({
     setError("");
 
     // Validation
-    if (
-      !formData.name ||
-      !formData.email ||
-      !formData.password ||
-      !formData.confirmPassword
-    ) {
-      setError("Vui lòng điền đầy đủ thông tin");
+    if (!formData.fullname || !formData.email || !formData.password) {
+      setError("Vui lòng điền đầy đủ họ tên, email và mật khẩu");
       return;
     }
 
@@ -80,17 +78,18 @@ export const SignupForm: React.FC<SignupFormProps> = ({
       return;
     }
 
-    setIsLoading(true);
     try {
-      // Giả lập API call - thay thế bằng API thực tế
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Giả lập thành công
+      await register({
+        fullname: formData.fullname,
+        email: formData.email,
+        password: formData.password,
+      });
       onSuccess?.();
-    } catch (error) {
-      setError("Có lỗi xảy ra khi đăng ký");
-    } finally {
-      setIsLoading(false);
+      router.push("/");
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.message || "Có lỗi xảy ra khi đăng ký";
+      setError(errorMessage);
     }
   };
 
@@ -165,8 +164,8 @@ export const SignupForm: React.FC<SignupFormProps> = ({
             name="name"
             autoComplete="name"
             autoFocus
-            value={formData.name}
-            onChange={handleChange("name")}
+            value={formData.fullname}
+            onChange={handleChange("fullname")}
             slotProps={{
               input: {
                 startAdornment: (

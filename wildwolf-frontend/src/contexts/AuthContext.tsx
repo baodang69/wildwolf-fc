@@ -6,21 +6,24 @@ import React, {
   useState,
   useEffect,
   ReactNode,
+  useCallback,
 } from "react";
-// import * as authApi from "../api/auth";
+import * as authService from "../api/authService";
 
 interface User {
   id: string;
   email: string;
-  name: string;
+  fullname: string;
   role: string;
 }
 
+// Định nghĩa kiểu dữ liệu cho AuthContext
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  logout: () => void;
+  login: (credentials: any) => Promise<void>;
+  register: (data: any) => Promise<void>;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -34,61 +37,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Kiểm tra authentication khi component mount
-  useEffect(() => {
-    const checkAuth = () => {
-      try {
-        const token = localStorage.getItem("authToken");
-        const userData = localStorage.getItem("userData");
-
-        if (token && userData) {
-          setUser(JSON.parse(userData));
-        }
-      } catch (error) {
-        console.error("Lỗi khi kiểm tra authentication:", error);
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("userData");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, []);
-
-  const login = async (email: string, password: string): Promise<boolean> => {
-    setIsLoading(true);
+  // Hàm kiểm tra trạng thái đăng nhập
+  const checkAuthStatus = useCallback(async () => {
     try {
-      // Mock login - thay thế bằng API thực tế sau
-      if (email === "admin@wildwolf.com" && password === "admin123") {
-        const userData = {
-          id: "1",
-          email: email,
-          name: "Admin",
-          role: "admin",
-        };
-        const token = "mock-jwt-token";
-
-        // Lưu token và user data
-        localStorage.setItem("authToken", token);
-        localStorage.setItem("userData", JSON.stringify(userData));
-        setUser(userData);
-
-        return true;
-      } else {
-        return false;
-      }
+      const { user: profile } = await authService.getProfile();
+      setUser(profile);
     } catch (error) {
-      console.error("Lỗi đăng nhập:", error);
-      return false;
+      setUser(null);
     } finally {
       setIsLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus]);
+
+  const login = async (credentials: any) => {
+    const { user: loggedInUser } = await authService.login(credentials);
+    setUser(loggedInUser);
   };
 
-  const logout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("userData");
+  const register = async (data: any) => {
+    const { user: newUser } = await authService.register(data);
+    setUser(newUser);
+  };
+
+  const logout = async () => {
+    await authService.logout();
     setUser(null);
   };
 
@@ -96,13 +72,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     user,
     isLoading,
     login,
+    register,
     logout,
     isAuthenticated: !!user,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {!isLoading && children}
+    </AuthContext.Provider>
+  );
 };
 
+// Hook để sử dụng AuthContext
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {

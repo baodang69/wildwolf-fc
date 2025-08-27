@@ -3,6 +3,8 @@ export const BASE_URL = "http://localhost:8080/";
 export const AUTH = {
   LOGIN: "auth/login",
   SIGN_UP: "auth/register",
+  LOGOUT: "auth/logout",
+  PROFILE: "auth/profile",
 };
 
 export const MATCHES = {

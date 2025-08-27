@@ -53,12 +53,14 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       return;
     }
 
-    const success = await login(email, password);
-    if (success) {
+    try {
+      await login({ email, password });
       onSuccess?.();
       router.push("/");
-    } else {
-      setError("Email hoặc mật khẩu không đúng");
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.message || "Email hoặc mật khẩu không đúng";
+      setError(errorMessage);
     }
   };
 

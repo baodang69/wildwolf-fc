@@ -19,6 +19,7 @@ import { Roles } from './decorators/roles.decorator';
 import { UserRole } from '../schemas/user.schema';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
+import type { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -26,9 +27,19 @@ export class AuthController {
 
   @Public()
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
+  async register(
+    @Body() registerDto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     try {
-      return await this.authService.register(registerDto);
+      const result = await this.authService.register(registerDto);
+      res.cookie('access_token', result.access_token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      });
+      return { message: result.message, user: result.user };
     } catch (error) {
       throw new HttpException(
         error.message || 'Đăng ký thất bại',
@@ -39,15 +50,31 @@ export class AuthController {
 
   @Public()
   @Post('login')
-  async login(@Body() loginDto: LoginDto) {
+  async login(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     try {
-      return await this.authService.login(loginDto);
+      const result = await this.authService.login(loginDto);
+      res.cookie('access_token', result.access_token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+      });
+      return { message: result.message, user: result.user };
     } catch (error) {
       throw new HttpException(
         error.message || 'Đăng nhập thất bại',
         error.status || HttpStatus.UNAUTHORIZED,
       );
     }
+  }
+
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('access_token');
+    return { message: 'Đăng xuất thành công' };
   }
 
   @Public()

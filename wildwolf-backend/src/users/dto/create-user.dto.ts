@@ -1,4 +1,10 @@
-import { IsString, IsEmail, IsNumberString, IsEnum } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsNumberString,
+  IsEnum,
+  IsOptional,
+} from 'class-validator';
 import { UserRole } from '../../schemas/user.schema';
 
 export class CreateUserDto {
@@ -8,11 +14,13 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
+  @IsOptional()
   @IsString()
-  club: string;
+  club?: string;
 
+  @IsOptional()
   @IsNumberString()
-  phone: string;
+  phone?: string;
 
   @IsString()
   password: string;

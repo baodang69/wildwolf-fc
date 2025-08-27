@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Avatar,
@@ -11,15 +11,10 @@ import {
   Divider,
   ListItemIcon,
   ListItemText,
-} from '@mui/material';
-import {
-  AccountCircle,
-  Logout,
-  Settings,
-  Person,
-} from '@mui/icons-material';
-import { useAuth } from '../../contexts/AuthContext';
-import { useRouter } from 'next/navigation';
+} from "@mui/material";
+import { AccountCircle, Logout, Settings, Person } from "@mui/icons-material";
+import { useAuth } from "../../contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
 export const UserMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -38,17 +33,17 @@ export const UserMenu: React.FC = () => {
   const handleLogout = () => {
     logout();
     handleClose();
-    router.push('/auth');
+    router.push("/auth");
   };
 
   const handleProfile = () => {
     handleClose();
-    router.push('/profile');
+    router.push("/profile");
   };
 
   const handleSettings = () => {
     handleClose();
-    router.push('/settings');
+    router.push("/settings");
   };
 
   if (!user) {
@@ -58,9 +53,9 @@ export const UserMenu: React.FC = () => {
   // Tạo avatar từ tên user
   const getAvatarText = (name: string) => {
     return name
-      .split(' ')
-      .map(word => word.charAt(0))
-      .join('')
+      .split(" ")
+      .map((word) => word.charAt(0))
+      .join("")
       .toUpperCase()
       .slice(0, 2);
   };
@@ -71,15 +66,15 @@ export const UserMenu: React.FC = () => {
         onClick={handleClick}
         size="small"
         sx={{ ml: 2 }}
-        aria-controls={open ? 'account-menu' : undefined}
+        aria-controls={open ? "account-menu" : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
+        aria-expanded={open ? "true" : undefined}
       >
-        <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
-          {getAvatarText(user.name)}
+        <Avatar sx={{ width: 32, height: 32, bgcolor: "primary.main" }}>
+          {getAvatarText(user.fullname)}
         </Avatar>
       </IconButton>
-      
+
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
@@ -89,36 +84,36 @@ export const UserMenu: React.FC = () => {
         PaperProps={{
           elevation: 0,
           sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
             mt: 1.5,
             minWidth: 200,
-            '& .MuiAvatar-root': {
+            "& .MuiAvatar-root": {
               width: 32,
               height: 32,
               ml: -0.5,
               mr: 1,
             },
-            '&:before': {
+            "&:before": {
               content: '""',
-              display: 'block',
-              position: 'absolute',
+              display: "block",
+              position: "absolute",
               top: 0,
               right: 14,
               width: 10,
               height: 10,
-              bgcolor: 'background.paper',
-              transform: 'translateY(-50%) rotate(45deg)',
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
               zIndex: 0,
             },
           },
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <Box sx={{ px: 2, py: 1 }}>
           <Typography variant="subtitle1" fontWeight="bold">
-            {user.name}
+            {user.fullname}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {user.email}
@@ -129,25 +124,25 @@ export const UserMenu: React.FC = () => {
             </Typography>
           )}
         </Box>
-        
+
         <Divider />
-        
+
         <MenuItem onClick={handleProfile}>
           <ListItemIcon>
             <Person fontSize="small" />
           </ListItemIcon>
           <ListItemText>Hồ sơ cá nhân</ListItemText>
         </MenuItem>
-        
+
         <MenuItem onClick={handleSettings}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           <ListItemText>Cài đặt</ListItemText>
         </MenuItem>
-        
+
         <Divider />
-        
+
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />

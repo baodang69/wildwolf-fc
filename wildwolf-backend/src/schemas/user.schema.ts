@@ -21,10 +21,10 @@ export class User {
   @Prop({ required: true })
   fullname: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   club: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   phone: string;
 
   @Prop({ required: true })
