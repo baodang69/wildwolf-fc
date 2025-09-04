@@ -17,9 +17,6 @@ export class CreateMemberDto {
   @IsString()
   fullname: string;
 
-  @IsString()
-  avatar: string;
-
   @IsDateString()
   dob: string;
 

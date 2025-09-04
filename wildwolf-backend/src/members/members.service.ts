@@ -9,14 +9,19 @@ import {
   MemberRole,
 } from '../schemas/members.schema';
 import { CreateMemberDto } from './dto/create-member.dto';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class MembersService {
   constructor(
     @InjectModel(Member.name) private memberModel: Model<MemberDocument>,
+    private uploadService: UploadService,
   ) {}
 
-  async create(createMemberDto: CreateMemberDto): Promise<Member> {
+  async create(
+    createMemberDto: CreateMemberDto,
+    avatar?: Express.Multer.File,
+  ): Promise<Member> {
     // Kiểm tra số áo đã tồn tại chưa
     const existingMember = await this.memberModel.findOne({
       number: createMemberDto.number,
@@ -27,7 +32,19 @@ export class MembersService {
       );
     }
 
-    const createdMember = new this.memberModel(createMemberDto);
+    let avatarUrl = '';
+    if (avatar) {
+      const uploadResult = await this.uploadService.uploadImage(
+        avatar,
+        'members',
+      );
+      avatarUrl = uploadResult.url;
+    }
+
+    const createdMember = new this.memberModel({
+      ...createMemberDto,
+      avatar: avatarUrl,
+    });
     return createdMember.save();
   }
 
@@ -73,6 +90,7 @@ export class MembersService {
   async update(
     id: string,
     updateData: CreateMemberDto,
+    avatar?: Express.Multer.File,
   ): Promise<Member | null> {
     // Nếu cập nhật số áo, kiểm tra trùng lặp
     if (updateData.number) {
@@ -87,8 +105,36 @@ export class MembersService {
       }
     }
 
+    const memberToUpdate = await this.findOne(id);
+    if (!memberToUpdate) {
+      return null;
+    }
+
+    const updatePayload: any = { ...updateData };
+
+    if (avatar) {
+      // Nếu có avatar cũ, xóa nó đi
+      if (memberToUpdate.avatar) {
+        try {
+          const publicId = this.uploadService.getPublicIdFromUrl(
+            memberToUpdate.avatar,
+          );
+          await this.uploadService.deleteImage(publicId);
+        } catch (error) {
+          console.error('Không thể xóa ảnh cũ:', error);
+        }
+      }
+
+      // Upload avatar mới
+      const uploadResult = await this.uploadService.uploadImage(
+        avatar,
+        'members',
+      );
+      updatePayload.avatar = uploadResult.url;
+    }
+
     return this.memberModel
-      .findByIdAndUpdate(id, updateData, { new: true })
+      .findByIdAndUpdate(id, updatePayload, { new: true })
       .exec();
   }
 

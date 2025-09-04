@@ -9,7 +9,10 @@ import {
   HttpException,
   HttpStatus,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { MembersService } from './members.service';
 import { CreateMemberDto } from './dto/create-member.dto';
 import {
@@ -23,9 +26,13 @@ export class MembersController {
   constructor(private readonly membersService: MembersService) {}
 
   @Post()
-  async create(@Body() createMemberDto: CreateMemberDto) {
+  @UseInterceptors(FileInterceptor('avatar'))
+  async create(
+    @Body() createMemberDto: CreateMemberDto,
+    @UploadedFile() avatar: Express.Multer.File,
+  ) {
     try {
-      return await this.membersService.create(createMemberDto);
+      return await this.membersService.create(createMemberDto, avatar);
     } catch (error) {
       throw new HttpException(
         'Không thể tạo thành viên: ' + error.message,
@@ -124,12 +131,18 @@ export class MembersController {
   }
 
   @Patch(':id')
+  @UseInterceptors(FileInterceptor('avatar'))
   async update(
     @Param('id') id: string,
     @Body() updateMemberDto: CreateMemberDto,
+    @UploadedFile() avatar: Express.Multer.File,
   ) {
     try {
-      const member = await this.membersService.update(id, updateMemberDto);
+      const member = await this.membersService.update(
+        id,
+        updateMemberDto,
+        avatar,
+      );
       if (!member) {
         throw new HttpException(
           'Thành viên không tồn tại',

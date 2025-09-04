@@ -66,6 +66,31 @@ export class UploadService {
     }
   }
 
+  getPublicIdFromUrl(url: string): string {
+    try {
+      // Example URL: http://res.cloudinary.com/cloud_name/image/upload/v12345/folder/public_id.webp
+      // We want to extract "folder/public_id"
+      const parts = url.split('/');
+      const uploadIndex = parts.indexOf('upload');
+      if (uploadIndex === -1 || uploadIndex + 2 >= parts.length) {
+        throw new Error('Invalid Cloudinary URL format');
+      }
+
+      // The part after version number is the public_id with extension
+      const publicIdWithExtension = parts.slice(uploadIndex + 2).join('/');
+      const lastDotIndex = publicIdWithExtension.lastIndexOf('.');
+
+      if (lastDotIndex === -1) {
+        return publicIdWithExtension; // No extension found
+      }
+
+      return publicIdWithExtension.substring(0, lastDotIndex);
+    } catch (error) {
+      console.error('Error extracting public ID:', error);
+      throw new BadRequestException('URL của ảnh không hợp lệ');
+    }
+  }
+
   async uploadMultipleImages(
     files: Express.Multer.File[],
     folder: string = 'wildwolf',

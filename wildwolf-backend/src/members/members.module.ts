@@ -3,9 +3,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MembersService } from './members.service';
 import { MembersController } from './members.controller';
 import { Member, MemberSchema } from '../schemas/members.schema';
+import { UploadModule } from '../upload/upload.module';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Member.name, schema: MemberSchema }])],
+  imports: [
+    MongooseModule.forFeature([{ name: Member.name, schema: MemberSchema }]),
+    UploadModule,
+  ],
   controllers: [MembersController],
   providers: [MembersService],
   exports: [MembersService],
