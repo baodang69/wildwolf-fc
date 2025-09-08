@@ -1,15 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Match, MatchDocument, Status } from '../schemas/matches.schema';
+import { Model, Types } from 'mongoose';
+import {
+  Match,
+  MatchDocument,
+  Status,
+  MatchImage,
+} from '../schemas/matches.schema';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { CreateMatchWithImagesDto } from './dto/create-match-with-images.dto';
-import { v2 as cloudinary } from 'cloudinary';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class MatchesService {
   constructor(
     @InjectModel(Match.name) private matchModel: Model<MatchDocument>,
+    private uploadService: UploadService,
   ) {}
 
   async create(createMatchDto: CreateMatchDto): Promise<Match> {
@@ -65,6 +71,21 @@ export class MatchesService {
   }
 
   async remove(id: string): Promise<Match | null> {
+    const matchToDelete = await this.findOne(id);
+    if (!matchToDelete) {
+      return null;
+    }
+
+    // Xóa tất cả ảnh liên quan trên Cloudinary
+    if (matchToDelete.images && matchToDelete.images.length > 0) {
+      const publicIds = matchToDelete.images.map((image) => image.publicId);
+      Promise.all(
+        publicIds.map((id) => this.uploadService.deleteImage(id)),
+      ).catch((err) => {
+        console.error('Lỗi khi xóa ảnh trên Cloudinary: ', err);
+      });
+    }
+
     return this.matchModel.findByIdAndDelete(id).exec();
   }
 
@@ -117,116 +138,69 @@ export class MatchesService {
     );
   }
 
-  // Upload ảnh cho match đã tồn tại
   async uploadImages(
     matchId: string,
     files: Express.Multer.File[],
-  ): Promise<any> {
+  ): Promise<Match> {
     if (!files || files.length === 0) {
       throw new Error('Không có file nào được upload');
     }
 
-    // Upload ảnh lên Cloudinary
-    const uploadPromises = files.map((file) => {
-      return new Promise((resolve, reject) => {
-        cloudinary.uploader
-          .upload_stream(
-            {
-              resource_type: 'image',
-              folder: 'wildwolf/matches',
-              transformation: [
-                { width: 1200, height: 800, crop: 'limit' },
-                { quality: 'auto' },
-              ],
-            },
-            (error, result) => {
-              if (error) reject(error);
-              else resolve(result?.secure_url);
-            },
-          )
-          .end(file.buffer);
-      });
-    });
+    const uploadResults = await this.uploadService.uploadMultipleImages(
+      files,
+      'matches',
+    );
 
-    const imageUrls = await Promise.all(uploadPromises);
+    const newImages: MatchImage[] = uploadResults.map((result) => ({
+      url: result.url,
+      publicId: result.publicId,
+    }));
 
-    // Cập nhật match với URLs ảnh mới
-    const updatedMatch = await this.matchModel
-      .findByIdAndUpdate(
-        matchId,
-        { $push: { images: { $each: imageUrls } } },
-        { new: true },
-      )
-      .populate('our_scorer.id', 'fullname')
-      .exec();
+    const updatedMatch = await this.matchModel.findByIdAndUpdate(
+      matchId,
+      { $push: { images: { $each: newImages } } },
+      { new: true },
+    );
 
     if (!updatedMatch) {
-      throw new Error('Không tìm thấy trận đấu');
+      throw new NotFoundException('Không tìm thấy trận đấu');
     }
 
-    return {
-      message: 'Upload ảnh thành công',
-      match: updatedMatch,
-      uploadedImages: imageUrls,
-    };
+    return updatedMatch;
   }
 
-  // Tạo match với upload ảnh cùng lúc
   async createWithImages(
     createMatchDto: CreateMatchWithImagesDto,
     files: Express.Multer.File[],
-  ): Promise<any> {
-    let imageUrls: string[] = [];
+  ): Promise<Match> {
+    let images: MatchImage[] = [];
 
-    // Upload ảnh nếu có
     if (files && files.length > 0) {
-      const uploadPromises = files.map((file) => {
-        return new Promise((resolve, reject) => {
-          cloudinary.uploader
-            .upload_stream(
-              {
-                resource_type: 'image',
-                folder: 'wildwolf/matches',
-                transformation: [
-                  { width: 1200, height: 800, crop: 'limit' },
-                  { quality: 'auto' },
-                ],
-              },
-              (error, result) => {
-                if (error) reject(error);
-                else resolve(result?.secure_url);
-              },
-            )
-            .end(file.buffer);
-        });
-      });
-
-      imageUrls = (await Promise.all(uploadPromises)) as string[];
+      const uploadResults = await this.uploadService.uploadMultipleImages(
+        files,
+        'matches',
+      );
+      images = uploadResults.map((result) => ({
+        url: result.url,
+        publicId: result.publicId,
+      }));
     }
 
-    // Tạo match data
-    const matchData = {
-      ...createMatchDto,
-      images: imageUrls,
-      our_scorer: createMatchDto.our_scorer || [],
-      opponent_scorer: createMatchDto.opponent_scorer || [],
-      status: createMatchDto.status || Status.COMING_SOON,
+    const { our_scorer, ...restOfDto } = createMatchDto;
+
+    const payloadToSave: any = {
+      ...restOfDto,
+      images,
     };
 
-    // Tạo match
-    const createdMatch = new this.matchModel(matchData);
-    const savedMatch = await createdMatch.save();
+    if (our_scorer && Array.isArray(our_scorer) && our_scorer.length > 0) {
+      payloadToSave.our_scorer = our_scorer.map((scorer) => ({
+        id: new Types.ObjectId(scorer.id),
+        number_of_goal: scorer.number_of_goal,
+      }));
+    }
 
-    // Populate và return
-    const populatedMatch = await this.matchModel
-      .findById(savedMatch._id)
-      .populate('our_scorer.id', 'fullname')
-      .exec();
-
-    return {
-      message: 'Tạo trận đấu với ảnh thành công',
-      match: populatedMatch,
-      uploadedImages: imageUrls,
-    };
-  } 
+    const createdMatch = new this.matchModel(payloadToSave);
+    return createdMatch.save();
+  }
 }

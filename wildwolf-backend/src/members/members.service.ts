@@ -113,7 +113,6 @@ export class MembersService {
     const updatePayload: any = { ...updateData };
 
     if (avatar) {
-      // Nếu có avatar cũ, xóa nó đi
       if (memberToUpdate.avatar) {
         try {
           const publicId = this.uploadService.getPublicIdFromUrl(

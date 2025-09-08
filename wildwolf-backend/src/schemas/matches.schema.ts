@@ -32,6 +32,17 @@ export enum Status {
   HIDE = 'HIDDEN',
 }
 
+@Schema({ _id: false })
+export class MatchImage {
+  @Prop({ required: true })
+  url: string;
+
+  @Prop({ required: true })
+  publicId: string;
+}
+
+export const MatchImageSchema = SchemaFactory.createForClass(MatchImage);
+
 @Schema({
   timestamps: true,
 })
@@ -60,8 +71,8 @@ export class Match {
   @Prop({ default: 0 })
   opponent_goal: number;
 
-  @Prop({ type: [String], default: [] })
-  images: string[];
+  @Prop({ type: [MatchImageSchema], default: [] })
+  images: MatchImage[];
 
   @Prop({ required: true })
   date: Date;

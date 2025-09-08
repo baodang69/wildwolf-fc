@@ -9,10 +9,11 @@ import {
   IsMongoId,
   Min,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import { Status } from '../../schemas/matches.schema';
 
 export class OurScorerDto {
+  @Transform(({ value }) => parseInt(value, 10))
   @IsNumber()
   @Min(1)
   number_of_goal: number;
@@ -25,6 +26,7 @@ export class OpponentScorerDto {
   @IsString()
   name: string;
 
+  @Transform(({ value }) => parseInt(value, 10))
   @IsNumber()
   @Min(1)
   number_of_goal: number;
@@ -43,8 +45,9 @@ export class CreateMatchDto {
   @IsString()
   stadium: string;
 
+  @IsOptional()
   @IsString()
-  opponent_avatar: string;
+  opponent_avatar?: string;
 
   @IsOptional()
   @IsArray()
@@ -63,9 +66,10 @@ export class CreateMatchDto {
   @Min(0)
   opponent_goal: number;
 
+  @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  images: string[];
+  images?: string[];
 
   @IsDateString()
   date: string;

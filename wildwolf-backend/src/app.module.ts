@@ -10,6 +10,7 @@ import { MembersModule } from './members/members.module';
 import { ContactsModule } from './contacts/appointment.module';
 import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
+import { GalleriesModule } from './galleries/galleries.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UploadModule } from './upload/upload.module';
     ContactsModule,
     AuthModule,
     UploadModule,
+    GalleriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
