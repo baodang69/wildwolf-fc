@@ -55,12 +55,24 @@ export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
           >
             <Box
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "1fr auto 1fr",
+                  sm: "1fr auto 1fr",
+                },
                 alignItems: "center",
+                gap: { xs: 1, sm: 2 },
+                width: "100%",
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: { xs: 1, sm: 2 },
+                  justifyContent: "flex-start",
+                }}
+              >
                 <Image
                   src="/logo-fc/wildwolf.jpeg"
                   alt="WildWolf FC Logo"
@@ -68,7 +80,13 @@ export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
                   height={40}
                   style={{ borderRadius: "50%" }}
                 />
-                <Typography sx={{ fontWeight: 700, fontSize: 18 }}>
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: { xs: 14, sm: 16, md: 18 },
+                    display: { xs: "none", sm: "block" },
+                  }}
+                >
                   FC Wildwolf
                 </Typography>
               </Box>
@@ -78,15 +96,34 @@ export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  gap: 0.5,
+                  gap: 1,
+                  minWidth: "120px",
                 }}
               >
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
+                  <Typography
+                    sx={{
+                      fontSize: { xs: 20, sm: 24, md: 28 },
+                      fontWeight: 700,
+                      minWidth: "30px",
+                      textAlign: "center",
+                    }}
+                  >
                     {match.our_goal ?? 0}
                   </Typography>
-                  <Typography>-</Typography>
-                  <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
+                  <Typography
+                    sx={{ fontSize: { xs: 16, sm: 18, md: 20 }, mx: 1 }}
+                  >
+                    -
+                  </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: { xs: 20, sm: 24, md: 28 },
+                      fontWeight: 700,
+                      minWidth: "30px",
+                      textAlign: "center",
+                    }}
+                  >
                     {match.opponent_goal ?? 0}
                   </Typography>
                 </Box>
@@ -111,8 +148,22 @@ export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
                 })()}
               </Box>
 
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Typography sx={{ fontWeight: 700, fontSize: 18 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: { xs: 1, sm: 2 },
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    fontSize: { xs: 14, sm: 16, md: 18 },
+                    display: { xs: "none", sm: "block" },
+                    textAlign: "right",
+                  }}
+                >
                   {match.opponent}
                 </Typography>
                 {match.opponent_avatar ? (
@@ -161,80 +212,155 @@ export const MatchesCard: React.FC<MatchCardProps> = ({ matchesData }) => {
                 {match.summary ?? "Không có thông tin"}
               </Typography>
 
-              <Divider sx={{ my: 1 }} />
+              <Divider sx={{ my: 2 }} />
+
+              {/* Scorers Section */}
               <Box
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  width: "100%",
+                  display: "grid",
+                  gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+                  gap: { xs: 2, md: 4 },
+                  mt: 2,
                 }}
               >
-                <Box sx={{ width: "14%" }}>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                    Đội nhà — Ghi bàn
+                <Box>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      fontWeight: 700,
+                      mb: 1.5,
+                      color: "primary.main",
+                      borderBottom: "2px solid",
+                      borderColor: "primary.main",
+                      pb: 0.5,
+                    }}
+                  >
+                    FC Wildwolf
                   </Typography>
-                  <List dense>
-                    {(match.our_scorer ?? []).length === 0 ? (
-                      <ListItem>
-                        <ListItemText primary="Chưa có" />
-                      </ListItem>
-                    ) : (
-                      (match.our_scorer ?? []).map((s, idx) => (
-                        <ListItem key={idx}>
-                          <ListItemText
-                            primary={`${s.id.fullname}`}
-                            secondary={
-                              <Typography
-                                component="span"
-                                sx={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 0.5,
-                                }}
-                              >
-                                <SportsSoccerIcon fontSize="small" />
-                                {s.number_of_goal ?? 0}
-                              </Typography>
-                            }
-                          />
-                        </ListItem>
-                      ))
-                    )}
-                  </List>
+                  {(match.our_scorer ?? []).length === 0 ? (
+                    <Box
+                      sx={{
+                        p: 2,
+                        backgroundColor: "grey.50",
+                        borderRadius: 1,
+                        textAlign: "center",
+                      }}
+                    >
+                      <Typography variant="body2" color="text.secondary">
+                        Không có bàn thắng
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Stack spacing={1}>
+                      {(match.our_scorer ?? []).map((s, idx) => (
+                        <Box
+                          key={idx}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            p: 1.5,
+                            backgroundColor: "success.50",
+                            borderRadius: 1,
+                            border: "1px solid",
+                            borderColor: "success.200",
+                          }}
+                        >
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            {s.id.fullname}
+                          </Typography>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.5,
+                            }}
+                          >
+                            <SportsSoccerIcon fontSize="small" />
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontWeight: 700,
+                                minWidth: "20px",
+                                textAlign: "center",
+                              }}
+                            >
+                              {s.number_of_goal ?? 0}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Stack>
+                  )}
                 </Box>
 
-                <Box sx={{ width: "14%" }}>
-                  <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-                    Đội khách — Ghi bàn
+                <Box>
+                  <Typography
+                    variant="subtitle1"
+                    sx={{
+                      fontWeight: 700,
+                      mb: 1.5,
+                      borderBottom: "2px solid",
+                      pb: 0.5,
+                    }}
+                  >
+                    {match.opponent}
                   </Typography>
-                  <List dense>
-                    {(match.opponent_scorer ?? []).length === 0 ? (
-                      <ListItem>
-                        <ListItemText primary="Chưa có" />
-                      </ListItem>
-                    ) : (
-                      (match.opponent_scorer ?? []).map((s, idx) => (
-                        <ListItem key={idx}>
-                          <ListItemText
-                            primary={`${s.name}`}
-                            secondary={
-                              <Typography
-                                component="span"
-                                sx={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 0.5,
-                                }}
-                              >
-                                <SportsSoccerIcon fontSize="small" />
-                                {s.number_of_goal ?? 0}
-                              </Typography>
-                            }
-                          />
-                        </ListItem>
-                      ))
-                    )}
-                  </List>
+                  {(match.opponent_scorer ?? []).length === 0 ? (
+                    <Box
+                      sx={{
+                        p: 2,
+                        backgroundColor: "grey.50",
+                        borderRadius: 1,
+                        textAlign: "center",
+                      }}
+                    >
+                      <Typography variant="body2" color="text.secondary">
+                        Không có bàn thắng
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Stack spacing={1}>
+                      {(match.opponent_scorer ?? []).map((s, idx) => (
+                        <Box
+                          key={idx}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            p: 1.5,
+                            backgroundColor: "error.50",
+                            borderRadius: 1,
+                            border: "1px solid",
+                            borderColor: "error.200",
+                          }}
+                        >
+                          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                            {s.name}
+                          </Typography>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.5,
+                            }}
+                          >
+                            <SportsSoccerIcon fontSize="small" />
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontWeight: 700,
+                                minWidth: "20px",
+                                textAlign: "center",
+                              }}
+                            >
+                              {s.number_of_goal ?? 0}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Stack>
+                  )}
                 </Box>
               </Box>
             </CardContent>
