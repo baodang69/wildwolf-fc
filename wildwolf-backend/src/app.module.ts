@@ -12,6 +12,8 @@ import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
 import { GalleriesModule } from './galleries/galleries.module';
 
+import { TagsModule } from './tags/tags.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,6 +26,7 @@ import { GalleriesModule } from './galleries/galleries.module';
     MembersModule,
     ContactsModule,
     AuthModule,
+    TagsModule,
     UploadModule,
     GalleriesModule,
   ],

@@ -29,6 +29,21 @@ export class BlogsController {
     }
   }
 
+  //Find By Tag
+  @Get()
+  async findByTag(@Query('tags') tagSlug?: string) {
+    try {
+      if (tagSlug) {
+        return await this.blogsService.findByTag(tagSlug);
+      }
+    } catch (error) {
+      throw new HttpException(
+        'Không thể lấy danh sách blogs: ' + error.message,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   @Get()
   async findAll(@Query('author') authorId?: string) {
     try {

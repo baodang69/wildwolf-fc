@@ -14,10 +14,10 @@ export class Gallery {
   user: Types.ObjectId;
 
   @Prop({ required: true })
-  imageUrl: string; // Đổi tên từ 'image' sang 'imageUrl' cho rõ ràng
+  imageUrl: string;
 
   @Prop({ required: true })
-  _id: string; 
+  _id: string;
 
   @Prop()
   title: string;

@@ -22,8 +22,11 @@ export const Header: React.FC = () => {
       position="static"
       elevation={0}
       sx={{
-        backgroundColor: "white",
+        backgroundColor: "white !important",
         color: "black",
+        zIndex: 11,
+        position: "relative",
+        backgroundImage: "none !important",
       }}
     >
       <Container maxWidth="lg">

@@ -15,6 +15,7 @@ import Link from "next/link";
 import { HeroCarousel } from "../components/home/HeroCarousel";
 import { MatchSchedule } from "../components/home/MatchSchedule";
 import { NewsSlider } from "../components/home/BlogSlider";
+import { relative } from "path";
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
@@ -24,7 +25,7 @@ export default function Home() {
       {isAuthenticated ? (
         <Box>
           <Typography variant="h3" component="h1" gutterBottom>
-            Chào mừng trở lại, {user?.name}!
+            Chào mừng trở lại, {user?.fullname}!
           </Typography>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3, mt: 2 }}>

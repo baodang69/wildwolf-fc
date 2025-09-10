@@ -1,4 +1,10 @@
-import { IsString, IsMongoId, IsOptional, IsNumber } from 'class-validator';
+import {
+  IsString,
+  IsMongoId,
+  IsOptional,
+  IsNumber,
+  IsArray,
+} from 'class-validator';
 
 export class CreateBlogDto {
   @IsString()
@@ -14,9 +20,17 @@ export class CreateBlogDto {
   author: string;
 
   @IsString()
-  coverimage: string;
+  coverImage: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsMongoId({ each: true, message: 'Mỗi tag phải là một MongoId hợp lệ' })
+  tags?: string[];
 
   @IsOptional()
   @IsNumber()
   like?: number;
+
+  @IsString()
+  slug: string;
 }
