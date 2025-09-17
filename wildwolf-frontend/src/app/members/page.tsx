@@ -3,9 +3,10 @@
 import { Container } from "@mui/material";
 import NextBreadcrumbs from "@/components/ui/Breadcrumb";
 import { Box } from "@mui/material";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { FootballField } from "@/components/member/FootbalField";
 import { MemberCard } from "@/components/member/MemberCard";
+import Loading from "@/app/loading";
 
 export default function MembersPage() {
   const [selectedPlayer, setSelectedPlayer] = useState<string>("");
@@ -66,7 +67,9 @@ export default function MembersPage() {
             />
           </Box>
           <Box sx={{ height: "100%" }}>
-            <MemberCard players={players} selectedPlayer={selectedPlayer} />
+            <Suspense fallback={<Loading />}>
+              <MemberCard players={players} selectedPlayer={selectedPlayer} />\
+            </Suspense>
           </Box>
         </Box>
       </Container>

@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Dialog,
@@ -11,6 +11,7 @@ import {
   IconButton,
   Avatar,
   Chip,
+  Skeleton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -24,11 +25,12 @@ interface PhotoModalProps {
 export default function PhotoModal({ params }: PhotoModalProps) {
   const router = useRouter();
   const { id } = use(params);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const getPhotoById = (id: string): Photo | null => {
     const photos: Photo[] = [
       {
         id: "1",
-        src: "/images/team-photo-1.jpg",
+        src: "https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/2024_4_30_638500786876224324_dac-vu-valorant-0.png",
         title: "Đội hình chính thức 2025",
         description: "Ảnh đội hình chính thức mùa giải 2025",
         date: new Date("2025-01-15"),
@@ -177,16 +179,28 @@ export default function PhotoModal({ params }: PhotoModalProps) {
             alignItems: "center",
             justifyContent: "center",
             bgcolor: "black",
+            position: "relative",
           }}
         >
+          {!imgLoaded && (
+            <Skeleton
+              variant="rectangular"
+              width="100%"
+              sx={{ maxHeight: "80vh" }}
+              animation="wave"
+            />
+          )}
+
           <img
             src={photo.src}
             alt={photo.title}
+            onLoad={() => setImgLoaded(true)}
             style={{
               width: "100%",
               height: "auto",
               maxHeight: "80vh",
               objectFit: "contain",
+              display: imgLoaded ? "block" : "none",
             }}
           />
         </Box>
@@ -196,6 +210,8 @@ export default function PhotoModal({ params }: PhotoModalProps) {
             width: { xs: "100%", md: "400px" },
             display: "flex",
             flexDirection: "column",
+            opacity: imgLoaded ? 1 : 0,
+            transition: "opacity 0.5s ease-in",
             borderLeft: { md: "1px solid #dbdbdb" },
           }}
         >
