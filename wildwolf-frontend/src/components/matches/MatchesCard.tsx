@@ -15,7 +15,7 @@ import {
   Stack,
 } from "@mui/material";
 import Image from "next/image";
-import { MatchCardProps } from "./type/match.type";
+import { MatchCardProps } from "../../interfaces/match.type";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 

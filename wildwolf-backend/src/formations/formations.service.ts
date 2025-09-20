@@ -27,7 +27,10 @@ export class FormationsService {
   }
 
   async findAll(): Promise<Formation[]> {
-    return this.formationModel.find().exec();
+    return this.formationModel.find().populate({
+      path: 'detail.memberId',
+      model: 'Member',
+    });
   }
 
   async findFormationByType(type: string): Promise<Formation | null> {
@@ -37,13 +40,23 @@ export class FormationsService {
       .exec();
   }
 
+  async findTrueFormation(): Promise<Formation | null> {
+    return this.formationModel
+      .findOne({ status: true })
+      .populate({
+        path: 'detail.memberId',
+        model: 'Member',
+      })
+      .exec();
+  }
+
   async updateMemberId(
     formationId: string,
-    detailId: string,
+    position: string,
     newMemberId: string,
   ): Promise<Formation | null> {
     const updated = await this.formationModel.findOneAndUpdate(
-      { _id: formationId, 'detail._id': detailId },
+      { _id: formationId, 'detail.position': position },
       { $set: { 'detail.$.memberId': new Types.ObjectId(newMemberId) } },
       { new: true },
     );

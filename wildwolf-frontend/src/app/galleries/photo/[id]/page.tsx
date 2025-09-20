@@ -1,6 +1,6 @@
 // app/gallery/photo/[id]/page.tsx
 import { Box, Container, Typography, Paper } from "@mui/material";
-import { Photo } from "@/components/gallery/type/photo.type";
+import { Photo } from "@/interfaces/photo.type";
 
 interface PhotoPageProps {
   params: { id: string };

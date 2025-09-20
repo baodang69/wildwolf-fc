@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BASE_URL, CONTACTS } from "../url";
-import { MatchRequestData } from "../../components/contact/type/contact.type";
+import { MatchRequestData } from "../../interfaces/contact.type";
 
 export default function createContacts(contactData: MatchRequestData) {
   return axios

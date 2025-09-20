@@ -1,5 +1,5 @@
 import React from "react";
-import { HotBlogCardProps } from "./type/blog.type";
+import { HotBlogCardProps } from "../../interfaces/blog.type";
 import Image from "next/image";
 import { Box, Chip, Typography, Avatar, Stack } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";

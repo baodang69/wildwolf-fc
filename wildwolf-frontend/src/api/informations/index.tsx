@@ -1,9 +1,9 @@
 import axios from "axios";
-import { BASE_URL, MATCHES } from "../url";
+import { BASE_URL, FORMATIONS } from "../url";
 
-export default function getMatches() {
+export default function getFormation() {
   return axios
-    .get(`${BASE_URL}${MATCHES.GET_MATCHES}`)
+    .get(`${BASE_URL}${FORMATIONS.GET_TRUE_FORMATION}`)
     .then((response: any) => {
       return response.data;
     })

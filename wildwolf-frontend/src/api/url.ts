@@ -24,5 +24,6 @@ export const CONTACTS = {
 };
 
 export const FORMATIONS = {
-  GET_INFOR: "formations",
+  GET_FORMATION: "formations",
+  GET_TRUE_FORMATION: "formations/recent",
 };

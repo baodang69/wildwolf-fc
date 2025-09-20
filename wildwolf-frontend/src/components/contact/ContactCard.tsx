@@ -17,7 +17,7 @@ import {
   LocationOn,
 } from "@mui/icons-material";
 import { useState, ChangeEvent, FormEvent } from "react";
-import { MatchRequestData, FormData } from "./type/contact.type";
+import { MatchRequestData, FormData } from "../../interfaces/contact.type";
 import React from "react";
 import createContacts from "../../api/contacts/index";
 
@@ -90,8 +90,8 @@ export const ContactCard: React.FC<ContactCardProps> = ({ onSubmit }) => {
         appointmenttime: combinedDateTime.toISOString(), // Hợp 2 field thành 1
         stadium: formData.stadium,
         opponent_club: formData.opponent_club,
-        opponent_logo: formData.opponent_logo || "", 
-        note: formData.note || "", 
+        opponent_logo: formData.opponent_logo || "",
+        note: formData.note || "",
       };
 
       console.log("Sending data to API:", apiData);

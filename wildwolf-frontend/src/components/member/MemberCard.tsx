@@ -8,7 +8,7 @@ export const MemberCard = ({
   players: any[];
   selectedPlayer: string;
 }) => {
-  const player = players.find((p) => p._id === selectedPlayer);
+  const player = players.find((p) => p.memberId?._id === selectedPlayer);
 
   if (!player) {
     return (
@@ -93,7 +93,7 @@ export const MemberCard = ({
             }}
           >
             <Image
-              src={player.avatar || "/default-player.jpg"}
+              src={player.memberId?.avatar || "/default-player.jpg"}
               fill
               alt={`${player.fullname} avatar`}
               style={{
@@ -103,7 +103,7 @@ export const MemberCard = ({
           </Box>
 
           <Chip
-            label={`#${player.number}`}
+            label={`#${player.memberId.number}`}
             color="primary"
             sx={{
               fontSize: "1.2rem",
@@ -123,7 +123,7 @@ export const MemberCard = ({
               color: "text.primary",
             }}
           >
-            {player.fullname}
+            {player.memberId.fullname}
           </Typography>
         </Box>
 
@@ -155,7 +155,7 @@ export const MemberCard = ({
                 Vị trí
               </Typography>
               <Typography variant="body1" sx={{ fontWeight: "medium" }}>
-                {player.position}
+                {player.memberId.position}
               </Typography>
             </Box>
 
@@ -172,7 +172,7 @@ export const MemberCard = ({
                 Vai trò
               </Typography>
               <Typography variant="body1" sx={{ fontWeight: "medium" }}>
-                {player.role}
+                {player.memberId.role}
               </Typography>
             </Box>
           </Box>
@@ -192,12 +192,12 @@ export const MemberCard = ({
               Trạng thái
             </Typography>
             <Chip
-              label={player.status}
+              label={player.memberId.status}
               size="small"
               color={
-                player.status === "Hoạt động"
+                player.memberId.status === "Hoạt động"
                   ? "success"
-                  : player.status === "Tạm nghỉ"
+                  : player.memberId.status === "Tạm nghỉ"
                   ? "warning"
                   : "default"
               }
@@ -205,7 +205,7 @@ export const MemberCard = ({
             />
           </Box>
 
-          {player.summary && (
+          {player.memberId.summary && (
             <Box
               sx={{
                 mt: "auto",
@@ -237,7 +237,7 @@ export const MemberCard = ({
                   lineHeight: 1.4,
                 }}
               >
-                {player.summary}
+                {player.memberId.summary}
               </Typography>
             </Box>
           )}

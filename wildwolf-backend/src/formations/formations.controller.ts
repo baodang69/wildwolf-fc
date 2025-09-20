@@ -31,6 +31,18 @@ export class FormationsController {
     }
   }
 
+  @Get('recent')
+  async getTrueFormation() {
+    try {
+      return await this.formationService.findTrueFormation();
+    } catch (error) {
+      throw new HttpException(
+        'Không thể lấy danh sách đội hình: ' + error.message,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   @Post()
   async create(@Body() createFormationDto: CreateFormationDto) {
     try {
@@ -46,16 +58,16 @@ export class FormationsController {
     }
   }
 
-  @Put(':formationId/detail/:detailId/member')
+  @Put(':formationId/detail/:position/member')
   async updateMemberId(
     @Param('formationId') formationId: string,
-    @Param('detailId') detailId: string,
+    @Param('position') position: string,
     @Body('newMemberId') newMemberId: string,
   ) {
     try {
       const updatedFormation = await this.formationService.updateMemberId(
         formationId,
-        detailId,
+        position,
         newMemberId,
       );
       if (!updatedFormation) {

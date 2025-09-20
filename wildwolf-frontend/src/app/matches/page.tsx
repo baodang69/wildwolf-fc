@@ -3,7 +3,7 @@
 import { Container } from "@mui/material";
 import NextBreadcrumbs from "@/components/ui/Breadcrumb";
 import { MatchesCard } from "@/components/matches/MatchesCard";
-import { Match } from "@/components/matches/type/match.type";
+import { Match } from "@/interfaces/match.type";
 import { useState, useEffect } from "react";
 import getMatches from "@/api/matches/index";
 

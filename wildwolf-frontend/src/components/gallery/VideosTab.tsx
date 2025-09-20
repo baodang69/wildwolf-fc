@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { VideoCardProp } from "./type/video.type";
+import { VideoCardProp } from "../../interfaces/video.type";
 
 export const VideosTab = ({ videos }: VideoCardProp) => {
   return (

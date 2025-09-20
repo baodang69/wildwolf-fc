@@ -16,7 +16,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-import { Photo } from "@/components/gallery/type/photo.type";
+import { Photo } from "@/interfaces/photo.type";
 
 interface PhotoModalProps {
   params: Promise<{ id: string }>;

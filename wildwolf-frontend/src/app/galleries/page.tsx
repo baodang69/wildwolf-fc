@@ -6,7 +6,7 @@ import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import { PhotosTab } from "@/components/gallery/PhotosTab";
 import { VideosTab } from "@/components/gallery/VideosTab";
 import NextBreadcrumbs from "@/components/ui/Breadcrumb";
-import { Photo } from "@/components/gallery/type/photo.type";
+import { Photo } from "@/interfaces/photo.type";
 
 interface TabPanelProps {
   children?: React.ReactNode;

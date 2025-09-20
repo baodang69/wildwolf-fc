@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Box } from "@mui/material";
-import { PhotoCardProp } from "./type/photo.type";
+import { PhotoCardProp } from "../../interfaces/photo.type";
 import { useState } from "react";
 import Skeleton from "@mui/material/Skeleton";
 

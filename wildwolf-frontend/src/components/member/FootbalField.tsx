@@ -1,17 +1,17 @@
 // FootballField.tsx
 import { Box } from "@mui/material";
-import { PlayerCardProp } from "./type/member.type";
+import { PlayerCardProp } from "../../interfaces/member.type";
 import Image from "next/image";
 import { PlayerNode } from "./PlayerNode";
 
 export const FootballField = ({
   players,
   onPlayerClick,
-  selectedPlayer, 
+  selectedPlayer,
 }: {
-  players: PlayerCardProp["players"]; 
-  onPlayerClick: (playerId: string) => void; 
-  selectedPlayer?: string; 
+  players: PlayerCardProp["players"];
+  onPlayerClick: (playerId: string) => void;
+  selectedPlayer?: string;
 }) => {
   return (
     <Box
@@ -52,12 +52,16 @@ export const FootballField = ({
           zIndex: 2,
         }}
       >
-        {players.map((player) => (
+        {players.map((player, index) => (
           <PlayerNode
-            key={player._id}
+            key={index}
             player={player}
-            isSelected={selectedPlayer === player._id}
-            onClick={() => onPlayerClick(player._id)}
+            isSelected={selectedPlayer === player.memberId?._id}
+            onClick={() => {
+              if (player.memberId?._id) {
+                onPlayerClick(player.memberId._id);
+              }
+            }}
           />
         ))}
       </Box>

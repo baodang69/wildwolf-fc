@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
-import { Blog, SiderBlogCardProps } from "./type/blog.type";
+import { Blog, SiderBlogCardProps } from "../../interfaces/blog.type";
 
 export const SiderBlogCard: React.FC<SiderBlogCardProps> = ({ blog }) => (
   <Box sx={{ width: "100%", mb: 3 }}>

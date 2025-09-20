@@ -3,42 +3,30 @@
 import { Container } from "@mui/material";
 import NextBreadcrumbs from "@/components/ui/Breadcrumb";
 import { Box } from "@mui/material";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { FootballField } from "@/components/member/FootbalField";
 import { MemberCard } from "@/components/member/MemberCard";
 import Loading from "@/app/loading";
+import getFormation from "@/api/informations/index";
+import { Detail } from "@/interfaces/formation.type";
 
 export default function MembersPage() {
   const [selectedPlayer, setSelectedPlayer] = useState<string>("");
-
-  const players = [
-    {
-      _id: "688dc7153d1f0fc7110060fd",
-      fullname: "Trần Đức Anh Tuấn",
-      avatar: "",
-      dob: "2003-12-31T17:00:00.000+00:00",
-      number: 1,
-      role: "CAPTAIN" as const,
-      summary: "toi la thg oc cho",
-      position: "GK" as const,
-      status: "PLAYING" as const,
-    },
-    {
-      _id: "688dc7153d1f0fc7110060fe",
-      fullname: "Nguyễn Văn A",
-      avatar: "",
-      dob: "2001-05-15T17:00:00.000+00:00",
-      number: 2,
-      role: "PLAYER" as const,
-      summary: "Hậu vệ phải",
-      position: "DF" as const,
-      status: "PLAYING" as const,
-    },
-  ];
+  const [players, setPlayers] = useState<Detail[]>([]);
 
   const handlePlayerClick = (playerId: string) => {
     setSelectedPlayer(playerId);
   };
+
+  useEffect(() => {
+    const fetchFormation = async () => {
+      try {
+        const formationData = await getFormation();
+        setPlayers(formationData.detail);
+      } catch (error) {}
+    };
+    fetchFormation();
+  }, []);
 
   return (
     <Container maxWidth="lg">
@@ -68,7 +56,7 @@ export default function MembersPage() {
           </Box>
           <Box sx={{ height: "100%" }}>
             <Suspense fallback={<Loading />}>
-              <MemberCard players={players} selectedPlayer={selectedPlayer} />\
+              <MemberCard players={players} selectedPlayer={selectedPlayer} />
             </Suspense>
           </Box>
         </Box>
