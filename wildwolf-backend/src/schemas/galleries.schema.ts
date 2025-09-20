@@ -1,7 +1,7 @@
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
-export type GalleryDocument = Gallery & Document;
+export type GalleryDocument = HydratedDocument<Gallery>;
 
 export enum ImageStatus {
   SHOW = 'SHOW',
@@ -16,10 +16,7 @@ export class Gallery {
   @Prop({ required: true })
   imageUrl: string;
 
-  @Prop({ required: true })
-  _id: string;
-
-  @Prop()
+  @Prop({ default: '' })
   title: string;
 
   @Prop({ required: true })
@@ -31,10 +28,7 @@ export class Gallery {
   @Prop({ type: [Types.ObjectId], ref: 'User', default: [] })
   userLiked: Types.ObjectId[];
 
-  @Prop({
-    enum: ImageStatus,
-    default: ImageStatus.SHOW,
-  })
+  @Prop({ type: String, enum: ImageStatus, default: ImageStatus.SHOW })
   status: ImageStatus;
 }
 

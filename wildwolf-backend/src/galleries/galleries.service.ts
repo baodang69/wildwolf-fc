@@ -54,7 +54,7 @@ export class GalleriesService {
 
     // Xóa ảnh trên Cloudinary
     if (itemToDelete._id) {
-      await this.uploadService.deleteImage(itemToDelete._id);
+      await this.uploadService.deleteImage(itemToDelete._id.toString());
     }
 
     // Xóa bản ghi trong database

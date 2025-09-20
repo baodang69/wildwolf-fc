@@ -75,4 +75,32 @@ export class FormationsController {
       );
     }
   }
+
+  @Put(':formationId')
+  async updateMemberStatus(
+    @Param('formationId') formationId: string,
+    @Body('status') status: boolean,
+  ) {
+    try {
+      const updatedFormation = await this.formationService.updateStatus(
+        formationId,
+        status,
+      );
+      if (!updatedFormation) {
+        throw new HttpException(
+          'Không tìm thấy đội hình hoặc chi tiết tương ứng',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      return updatedFormation;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        `Không thể cập nhật memberId: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 }

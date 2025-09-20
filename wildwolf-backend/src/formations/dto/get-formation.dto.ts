@@ -39,4 +39,8 @@ export class FormationDto {
   @ValidateNested({ each: true })
   @Type(() => DetailDto)
   detail: DetailDto[];
+
+  @IsString()
+  @IsNotEmpty()
+  status: boolean;
 }

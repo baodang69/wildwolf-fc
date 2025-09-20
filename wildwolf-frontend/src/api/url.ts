@@ -22,3 +22,7 @@ export const CONTACTS = {
   GET_CONTACTS: "contacts",
   CREATE_CONTACTS: "contacts",
 };
+
+export const FORMATIONS = {
+  GET_INFOR: "formations",
+};

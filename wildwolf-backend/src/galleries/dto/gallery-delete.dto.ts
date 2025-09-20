@@ -15,7 +15,7 @@ export class UserLikedDto {
   _id: string;
 }
 
-export class CreateGalleryDto {
+export class DeleteGalleryDto {
   @IsNotEmpty()
   user: UserDto;
 

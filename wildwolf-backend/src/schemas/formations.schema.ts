@@ -28,6 +28,9 @@ export class Formation {
   @Prop({ required: true })
   type: string;
 
+  @Prop({ required: true, default: false })
+  status: boolean;
+
   @Prop({ required: true })
   detail: Detail[];
 }
