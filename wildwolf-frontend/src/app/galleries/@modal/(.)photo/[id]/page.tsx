@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Dialog,
@@ -17,6 +17,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import { Photo } from "@/interfaces/photo.type";
+import { getImageDetail } from "@/api/galleries";
+import { shortenName } from "./../../../../../utils/shortenName";
 
 interface PhotoModalProps {
   params: Promise<{ id: string }>;
@@ -26,97 +28,21 @@ export default function PhotoModal({ params }: PhotoModalProps) {
   const router = useRouter();
   const { id } = use(params);
   const [imgLoaded, setImgLoaded] = useState(false);
-  const getPhotoById = (id: string): Photo | null => {
-    const photos: Photo[] = [
-      {
-        id: "1",
-        src: "https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/2024_4_30_638500786876224324_dac-vu-valorant-0.png",
-        title: "Đội hình chính thức 2025",
-        description: "Ảnh đội hình chính thức mùa giải 2025",
-        date: new Date("2025-01-15"),
-        like: {
-          _id: "like_001",
-          fullname: "Nguyễn Văn An",
-        },
-        status: "SHOW",
-        size: "213KB",
-      },
-      {
-        id: "2",
-        src: "/images/team-photo-2.jpg",
-        title: "Buổi tập luyện",
-        description: "Hình ảnh buổi tập luyện chuẩn bị cho trận đấu",
-        date: new Date("2025-01-10"),
-        like: {
-          _id: "like_002",
-          fullname: "Trần Thị Bình",
-        },
+  const [photo, setPhoto] = useState<Photo | null>(null);
 
-        status: "SHOW",
-        size: "213KB",
-      },
-      {
-        id: "3",
-        src: "/images/team-photo-3.jpg",
-        title: "Chiến thắng vòng 1",
-        description: "Khoảnh khắc ăn mừng chiến thắng",
-        date: new Date("2025-01-05"),
-        like: {
-          _id: "like_003",
-          fullname: "Lê Văn Cường",
-        },
-
-        status: "SHOW",
-        size: "213KB",
-      },
-      {
-        id: "4",
-        src: "/images/team-photo-4.jpg",
-        title: "Giao hữu đội bạn",
-        description: "Trận giao hữu với đội bóng địa phương",
-        date: new Date("2025-01-03"),
-        like: {
-          _id: "like_004",
-          fullname: "Phạm Thị Dung",
-        },
-
-        status: "SHOW",
-        size: "213KB",
-      },
-      {
-        id: "5",
-        src: "/images/team-photo-5.jpg",
-        title: "Lễ khai mạc mùa giải",
-        description: "Buổi lễ khai mạc mùa giải mới",
-        date: new Date("2025-01-01"),
-        like: {
-          _id: "like_005",
-          fullname: "Hoàng Văn Em",
-        },
-
-        status: "SHOW",
-        size: "213KB",
-      },
-      {
-        id: "6",
-        src: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ1mUs9hZvSUOevwBwYVh43am5dpIJhSZavvYWr6soJEI6GK1NYvBdHtUGaiDwGY2iQ9WoHxWDX9HFmI7lXSU9r2wlIk6DoUcC3cTwhFw",
-        title: "Chụp ảnh kỷ niệm",
-        description: "Ảnh kỷ niệm cùng ban huấn luyện",
-        date: new Date("2024-12-30"),
-        like: {
-          _id: "like_006",
-          fullname: "Vũ Thị Giang",
-        },
-
-        status: "SHOW",
-        size: "213KB",
-      },
-    ];
-
-    return photos.find((photo) => photo.id === id) || null;
-  };
-
-  const photo = getPhotoById(id);
+  useEffect(() => {
+    if (!id) return;
+    const fetchPhoto = async () => {
+      try {
+        const data = await getImageDetail(id);
+        console.log("Data: " + data.data);
+        setPhoto(data.data);
+      } catch (error) {
+        console.log("Error fetching data: " + error);
+      }
+    };
+    fetchPhoto();
+  }, [id]);
 
   const handleClose = () => {
     router.back();
@@ -192,7 +118,7 @@ export default function PhotoModal({ params }: PhotoModalProps) {
           )}
 
           <img
-            src={photo.src}
+            src={photo.imageUrl}
             alt={photo.title}
             onLoad={() => setImgLoaded(true)}
             style={{
@@ -219,14 +145,14 @@ export default function PhotoModal({ params }: PhotoModalProps) {
           <Box sx={{ p: 2, borderBottom: "1px solid #efefef" }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <Avatar sx={{ width: 32, height: 32 }}>
-                {photo.like.fullname.charAt(0)}
+                {photo.user.avatar}
               </Avatar>
               <Box>
                 <Typography variant="subtitle2" fontWeight="600">
-                  {photo.like.fullname}
+                  {photo.user.fullname}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                  {photo.date.toLocaleDateString("vi-VN")}
+                  {new Date(photo.createdAt).toLocaleDateString("vi-VN")}
                 </Typography>
               </Box>
             </Box>
@@ -261,10 +187,10 @@ export default function PhotoModal({ params }: PhotoModalProps) {
                   <ShareIcon />
                 </IconButton>
               </Box>
-
-              <Typography variant="body2" color="text.secondary">
-                Liked by {photo.like.fullname}
-              </Typography>
+              {photo.userLiked.length > 0 ? <Typography variant="body2" color="text.secondary">
+                Liked by{" "}
+                {shortenName(photo.userLiked.map((user) => user.fullname))}
+              </Typography> : null}
             </Box>
           </Box>
         </Box>

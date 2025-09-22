@@ -25,7 +25,7 @@ export class Gallery {
   @Prop({ default: 'Chưa có ghi chú' })
   note: string;
 
-  @Prop({ type: [Types.ObjectId], ref: 'User', default: [] })
+  @Prop({ type: [Types.ObjectId], ref: 'User', default: [], required: false })
   userLiked: Types.ObjectId[];
 
   @Prop({ type: String, enum: ImageStatus, default: ImageStatus.SHOW })

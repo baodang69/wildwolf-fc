@@ -1,18 +1,27 @@
-export type Photo = {
-  id: string;
-  src: string;
+export interface Photo {
+  _id: string;
+  user: User;
+  imageUrl: string;
   title: string;
   description: string;
-  date: Date;
-  like: Like;
+  note: string;
+  userLiked: Like[];
   status: Status;
-  size: string;
-};
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 
 export type Status = "SHOW" | "HIDDEN";
 
 export type Like = {
   _id: string;
+  fullname: string;
+};
+
+export type User = {
+  _id: string;
+  avatar: string;
   fullname: string;
 };
 

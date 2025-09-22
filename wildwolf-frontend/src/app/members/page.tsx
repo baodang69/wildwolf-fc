@@ -23,7 +23,9 @@ export default function MembersPage() {
       try {
         const formationData = await getFormation();
         setPlayers(formationData.detail);
-      } catch (error) {}
+      } catch (error) {
+        console.log("Error fetching formations due to: " + error);
+      }
     };
     fetchFormation();
   }, []);

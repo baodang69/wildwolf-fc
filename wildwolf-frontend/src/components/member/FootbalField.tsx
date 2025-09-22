@@ -1,6 +1,6 @@
 // FootballField.tsx
 import { Box } from "@mui/material";
-import { PlayerCardProp } from "../../interfaces/member.type";
+import { Detail } from "../../interfaces/formation.type";
 import Image from "next/image";
 import { PlayerNode } from "./PlayerNode";
 
@@ -9,7 +9,7 @@ export const FootballField = ({
   onPlayerClick,
   selectedPlayer,
 }: {
-  players: PlayerCardProp["players"];
+  players: Detail[];
   onPlayerClick: (playerId: string) => void;
   selectedPlayer?: string;
 }) => {

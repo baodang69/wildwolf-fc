@@ -33,7 +33,7 @@ export const UserMenu: React.FC = () => {
   const handleLogout = () => {
     logout();
     handleClose();
-    router.push("/auth");
+    router.push("/");
   };
 
   const handleProfile = () => {

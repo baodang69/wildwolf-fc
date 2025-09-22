@@ -27,3 +27,8 @@ export const FORMATIONS = {
   GET_FORMATION: "formations",
   GET_TRUE_FORMATION: "formations/recent",
 };
+
+export const GALLERIES = {
+  GET_IMAGES: "galleries",
+  UPLOAD_IMAGES: "galleries/upload",
+};

@@ -38,11 +38,19 @@ export class GalleriesService {
   }
 
   async findAll(): Promise<Gallery[]> {
-    return this.galleryModel.find().exec();
+    return this.galleryModel
+      .find()
+      .populate('user')
+      .populate('userLiked')
+      .exec();
   }
 
   async findGallery(id: string): Promise<Gallery | null> {
-    return this.galleryModel.findById(id).exec();
+    return this.galleryModel
+      .findById(id)
+      .populate('user')
+      .populate('userLiked')
+      .exec();
   }
 
   async deleteImage(id: string): Promise<Gallery | null> {

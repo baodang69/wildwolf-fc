@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Tabs, Tab, Container, Paper } from "@mui/material";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
@@ -7,6 +7,7 @@ import { PhotosTab } from "@/components/gallery/PhotosTab";
 import { VideosTab } from "@/components/gallery/VideosTab";
 import NextBreadcrumbs from "@/components/ui/Breadcrumb";
 import { Photo } from "@/interfaces/photo.type";
+import { getImages } from "@/api/galleries";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -42,6 +43,7 @@ const a11yProps = (index: number) => {
 
 export default function TeamMediaPage() {
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [photosData, setPhotosData] = useState<Photo[]>([]);
 
   const handleTabChange = (
     event: React.SyntheticEvent,
@@ -50,21 +52,18 @@ export default function TeamMediaPage() {
     setActiveTab(newValue);
   };
 
-  const photosData: Photo[] = [
-    {
-      id: "1",
-      src: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ1mUs9hZvSUOevwBwYVh43am5dpIJhSZavvYWr6soJEI6GK1NYvBdHtUGaiDwGY2iQ9WoHxWDX9HFmI7lXSU9r2wlIk6DoUcC3cTwhFw",
-      title: "Đội hình chính thức 2025",
-      description: "Ảnh đội hình chính thức mùa giải 2025",
-      date: new Date("2025-01-15"),
-      like: {
-        _id: "like_001",
-        fullname: "Nguyễn Văn An",
-      },
-      status: "SHOW",
-      size: "213KB",
-    },
-  ];
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      try {
+        const data = await getImages();
+        console.log(data.data);
+        setPhotosData(data.data);
+      } catch (error) {
+        console.log("Error fetching images due to: " + error);
+      }
+    };
+    fetchPhotos();
+  }, []);
 
   const videosData = [
     {

@@ -1,34 +1,29 @@
-// app/gallery/photo/[id]/page.tsx
+"use client";
+
 import { Box, Container, Typography, Paper } from "@mui/material";
 import { Photo } from "@/interfaces/photo.type";
+import { use, useState, useEffect } from "react";
+import { getImageDetail } from "@/api/galleries";
 
 interface PhotoPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-const getPhotoById = (id: string): Photo | null => {
-  const photos: Photo[] = [
-    {
-      id: "2",
-      src: "/images/team-photo-1.jpg",
-      title: "Đội hình chính thức 2025",
-      description:
-        "Ảnh đội hình chính thức mùa giải 2025 với đầy đủ các thành viên và ban huấn luyện. Một mùa giải đầy hứa hẹn với đội hình mạnh mẽ.",
-      date: new Date("2025-01-15"),
-      like: {
-        _id: "like_001",
-        fullname: "Nguyễn Văn An",
-      },
-      status: "SHOW",
-      size: "213KB",
-    },
-  ];
-
-  return photos.find((photo) => photo.id === id) || null;
-};
-
 export default function PhotoPage({ params }: PhotoPageProps) {
-  const photo = getPhotoById(params.id);
+  const { id } = use(params);
+  const [photo, setPhoto] = useState<Photo | null>(null);
+
+  useEffect(() => {
+    if (!id) return;
+    const fetchPhoto = async () => {
+      try {
+        const data = await getImageDetail(id);
+        console.log(data.data);
+        setPhoto(data.data);
+      } catch (error) {}
+    };
+    fetchPhoto();
+  }, [id]);
 
   if (!photo) {
     return <Typography>Photo not found</Typography>;
@@ -38,7 +33,7 @@ export default function PhotoPage({ params }: PhotoPageProps) {
     <Container maxWidth="lg" sx={{ mt: 4 }}>
       <Paper sx={{ p: 3, borderRadius: 2 }}>
         <img
-          src={photo.src}
+          src={photo.imageUrl}
           alt={photo.title}
           style={{ width: "100%", height: "auto", borderRadius: 8 }}
         />

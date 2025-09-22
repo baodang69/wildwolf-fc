@@ -10,7 +10,6 @@ export const PhotosTab = ({ photos }: PhotoCardProp) => {
   const [loadedPhotos, setLoadedPhotos] = useState<string[]>([]);
 
   const handleImageLoad = (id: string) => {
-    console.log("Image loaded:", id);
     setLoadedPhotos((prev) => [...prev, id]);
   };
 
@@ -29,12 +28,12 @@ export const PhotosTab = ({ photos }: PhotoCardProp) => {
       }}
     >
       {photos.map((photo) => {
-        const isLoaded = loadedPhotos.includes(photo.id);
+        const isLoaded = loadedPhotos.includes(photo._id);
 
         return (
           <Link
-            key={photo.id}
-            href={`/galleries/photo/${photo.id}`}
+            key={photo._id}
+            href={`/galleries/photo/${photo._id}`}
             style={{ textDecoration: "none" }}
           >
             <Box
@@ -64,13 +63,12 @@ export const PhotosTab = ({ photos }: PhotoCardProp) => {
               )}
 
               <img
-                src={photo.src}
+                src={photo.imageUrl}
                 alt={photo.title}
-                loading="lazy"
-                onLoad={() => handleImageLoad(photo.id)}
+                onLoad={() => handleImageLoad(photo._id)}
                 onError={() => {
-                  console.error("Failed to load image:", photo.src);
-                  handleImageLoad(photo.id);
+                  console.error("Failed to load image:", photo.imageUrl);
+                  handleImageLoad(photo._id);
                 }}
                 style={{
                   width: "100%",
