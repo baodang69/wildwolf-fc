@@ -8,7 +8,10 @@ import {
   UploadedFile,
   Body,
   Put,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { GalleriesService } from './galleries.service';
 import { CreateGalleryDto } from './dto/gallery-create.dto';
@@ -54,32 +57,30 @@ export class GalleriesController {
     };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':galleryId/like')
   async userLikeIncrement(
     @Param('galleryId') galleryId: string,
-    @Body('userId') userId: string,
+    @Request() req,
   ) {
+    const userId = req.user.sub;
     const updatedGallery = await this.galleriesService.userLike(
       galleryId,
       userId,
     );
     if (!updatedGallery) {
-      return {
-        success: false,
-        message: 'Không tìm thấy ảnh để like',
-      };
+      return { success: false, data: 'Không like ảnh được' };
     }
-    return {
-      success: true,
-      data: updatedGallery,
-    };
+    return { success: true, data: updatedGallery };
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':galleryId/unlike')
   async userLikeDecrement(
     @Param('galleryId') galleryId: string,
-    @Body('userId') userId: string,
+    @Request() req,
   ) {
+    const userId = req.user.sub;
     const updatedGallery = await this.galleriesService.userLikeDecrement(
       galleryId,
       userId,
