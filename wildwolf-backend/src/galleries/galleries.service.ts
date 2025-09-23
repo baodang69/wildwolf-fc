@@ -53,6 +53,33 @@ export class GalleriesService {
       .exec();
   }
 
+  async userLike(galleryId: string, userId: string): Promise<Gallery | null> {
+    const gallery = await this.galleryModel.findById(galleryId);
+    if (!gallery) return null;
+
+    const userObjectId = new Types.ObjectId(userId);
+
+    if (!gallery.userLiked.includes(userObjectId)) {
+      gallery.userLiked.push(userObjectId);
+      await gallery.save();
+    }
+
+    return gallery;
+  }
+
+  async userLikeDecrement(
+    galleryId: string,
+    userId: string,
+  ): Promise<Gallery | null> {
+    const gallery = await this.galleryModel.findById(galleryId);
+    if (!gallery) return null;
+
+    gallery.userLiked = gallery.userLiked.filter((id) => !id.equals(userId));
+    await gallery.save();
+
+    return gallery;
+  }
+
   async deleteImage(id: string): Promise<Gallery | null> {
     const itemToDelete = await this.galleryModel.findById(id);
 

@@ -7,6 +7,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Body,
+  Put,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { GalleriesService } from './galleries.service';
@@ -50,6 +51,48 @@ export class GalleriesController {
       success: true,
       message: 'Lấy ảnh thành công',
       data: results,
+    };
+  }
+
+  @Put(':galleryId/like')
+  async userLikeIncrement(
+    @Param('galleryId') galleryId: string,
+    @Body('userId') userId: string,
+  ) {
+    const updatedGallery = await this.galleriesService.userLike(
+      galleryId,
+      userId,
+    );
+    if (!updatedGallery) {
+      return {
+        success: false,
+        message: 'Không tìm thấy ảnh để like',
+      };
+    }
+    return {
+      success: true,
+      data: updatedGallery,
+    };
+  }
+
+  @Put(':galleryId/unlike')
+  async userLikeDecrement(
+    @Param('galleryId') galleryId: string,
+    @Body('userId') userId: string,
+  ) {
+    const updatedGallery = await this.galleriesService.userLikeDecrement(
+      galleryId,
+      userId,
+    );
+    if (!updatedGallery) {
+      return {
+        success: false,
+        message: 'Lỗi server không unlike được',
+      };
+    }
+    return {
+      success: true,
+      data: updatedGallery,
     };
   }
 
