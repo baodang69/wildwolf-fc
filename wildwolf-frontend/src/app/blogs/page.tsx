@@ -4,11 +4,33 @@ import { HotBlogCard } from "@/components/blog/HotBlogCard";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { SideBar } from "@/components/blog/SideBar";
 import { Divider } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import { InputAdornment } from "@mui/material";
-import { IconButton } from "@mui/material";
 import { SearchInput } from "@/components/ui/SearchInput";
+import type { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "WildWolf FC - Blogs Page",
+  description:
+    "Stay updated with the latest news, articles, and stories about WildWolf FC and football.",
+  icons: {
+    icon: "/favicon/favicon.ico",
+  },
+  openGraph: {
+    title: "WildWolf FC - Blogs Page",
+    description: "Explore the latest blogs and updates from WildWolf FC.",
+    url: "https://wildwolffc.com/blogs",
+    siteName: "WildWolf FC",
+    images: [
+      {
+        url: "https://res.cloudinary.com/dqxzklfzz/image/upload/v1759171454/wildwolf_yjylpx.jpg",
+        width: 1200,
+        height: 630,
+        alt: "WildWolf FC Logo",
+      },
+    ],
+    locale: "vi_VN",
+    type: "website",
+  },
+};
 export default function BlogsPage() {
   const blogHot = {
     _id: "1",

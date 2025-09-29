@@ -20,6 +20,7 @@ export const SearchInput = ({ width }: { width: any }) => {
       }}
       sx={{
         display: "flex",
+        backgroundColor: "white",
         marginLeft: "auto",
         width: width,
         "& .MuiOutlinedInput-root": {

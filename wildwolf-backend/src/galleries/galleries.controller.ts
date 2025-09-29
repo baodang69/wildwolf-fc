@@ -63,7 +63,6 @@ export class GalleriesController {
     @Param('galleryId') galleryId: string,
     @Request() req,
   ) {
-    console.log(req.user);
     const userId = req.user.sub;
     const updatedGallery = await this.galleriesService.userLike(
       galleryId,

@@ -14,11 +14,14 @@ export class BlogsService {
   }
 
   async findByTag(tag: string): Promise<Blog[]> {
-    return this.blogModel.find({ tags: tag }).exec();
+    return this.blogModel.find({ slug: tag }).exec();
   }
 
   async findAll(): Promise<Blog[]> {
-    return this.blogModel.find().populate('author', 'fullname email').exec();
+    return this.blogModel
+      .find()
+      .populate('author', 'fullname avatar email ')
+      .exec();
   }
 
   async findOne(id: string): Promise<Blog | null> {

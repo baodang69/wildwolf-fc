@@ -1,25 +1,37 @@
-"use client";
-
 import React from "react";
-import {
-  Container,
-  Box,
-  Typography,
-  Card,
-  CardContent,
-  Button,
-} from "@mui/material";
-import { useAuth } from "../contexts/AuthContext";
-import { Sports, Group, CalendarToday, Article } from "@mui/icons-material";
-import Link from "next/link";
+import { Container, Box } from "@mui/material";
 import { HeroCarousel } from "../components/home/HeroCarousel";
 import { MatchSchedule } from "../components/home/MatchSchedule";
 import { NewsSlider } from "../components/home/BlogSlider";
-import { relative } from "path";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "WildWolf FC - Official Homepage",
+  description:
+    "Welcome to WildWolf FC, the official homepage for news, match schedules and club updates.",
+  icons: {
+    icon: "/favicon/favicon.ico",
+  },
+  openGraph: {
+    title: "WildWolf FC - Official Homepage",
+    description:
+      "Stay updated with the latest news and matches from WildWolf FC.",
+    url: "https://wildwolffc.com",
+    siteName: "WildWolf FC",
+    images: [
+      {
+        url: "https://res.cloudinary.com/dqxzklfzz/image/upload/v1759171454/wildwolf_yjylpx.jpg",
+        width: 1200,
+        height: 630,
+        alt: "WildWolf FC Logo",
+      },
+    ],
+    locale: "vi_VN",
+    type: "website",
+  },
+};
 
 export default function Home() {
-  const { user, isAuthenticated } = useAuth();
-
   return (
     <Container maxWidth="lg">
       <Box>

@@ -1,17 +1,18 @@
 import { Metadata } from "next";
+import React from "react"
 
 export const metadata: Metadata = {
-  title: "WildWolf FC - Gallery Page",
+  title: "WildWolf FC - Matches Page",
   description:
-    "Explore photos and videos of WildWolf FC, capturing team moments, matches, and highlights.",
+    "View the latest match schedule and results of WildWolf FC on our Matches Page.",
   icons: {
     icon: "/favicon/favicon.ico",
   },
   openGraph: {
-    title: "WildWolf FC - Gallery Page",
+    title: "WildWolf FC - Matches Page",
     description:
-      "Explore photos and videos of WildWolf FC, capturing team moments, matches, and highlights.",
-    url: "https://wildwolffc.com/gallery",
+      "Stay updated with WildWolf FC's latest match schedules and results.",
+    url: "https://wildwolffc.com/matches",
     siteName: "WildWolf FC",
     images: [
       {
@@ -26,17 +27,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function GalleryLayout({
+export default function MatchesLayout({
   children,
-  modal,
 }: {
   children: React.ReactNode;
-  modal: React.ReactNode;
 }) {
-  return (
-    <>
-      {children}
-      {modal}
-    </>
-  );
+  return <div>{children}</div>;
 }

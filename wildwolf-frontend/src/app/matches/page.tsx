@@ -7,6 +7,7 @@ import { Match } from "@/interfaces/match.type";
 import { useState, useEffect } from "react";
 import getMatches from "@/api/matches/index";
 
+
 export default function MatchesPage() {
   const [matches, setMatches] = useState<Match[]>([]);
 

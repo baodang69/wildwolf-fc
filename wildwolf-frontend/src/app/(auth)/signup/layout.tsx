@@ -1,17 +1,17 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "WildWolf FC - Gallery Page",
+  title: "WildWolf FC - Signup",
   description:
-    "Explore photos and videos of WildWolf FC, capturing team moments, matches, and highlights.",
+    "Đăng ký tài khoản WildWolf FC để tham gia cộng đồng và nhận các cập nhật sớm nhất.",
   icons: {
     icon: "/favicon/favicon.ico",
   },
   openGraph: {
-    title: "WildWolf FC - Gallery Page",
+    title: "WildWolf FC - Signup",
     description:
-      "Explore photos and videos of WildWolf FC, capturing team moments, matches, and highlights.",
-    url: "https://wildwolffc.com/gallery",
+      "Đăng ký tài khoản WildWolf FC để tham gia cộng đồng và nhận các cập nhật sớm nhất.",
+    url: "https://wildwolffc.com/signup",
     siteName: "WildWolf FC",
     images: [
       {
@@ -25,18 +25,10 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
-
-export default function GalleryLayout({
+export default function SignupLayout({
   children,
-  modal,
 }: {
   children: React.ReactNode;
-  modal: React.ReactNode;
 }) {
-  return (
-    <>
-      {children}
-      {modal}
-    </>
-  );
+  return <>{children}</>;
 }

@@ -10,6 +10,7 @@ import Loading from "@/app/loading";
 import getFormation from "@/api/informations/index";
 import { Detail } from "@/interfaces/formation.type";
 
+
 export default function MembersPage() {
   const [selectedPlayer, setSelectedPlayer] = useState<string>("");
   const [players, setPlayers] = useState<Detail[]>([]);

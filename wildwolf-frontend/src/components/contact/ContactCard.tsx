@@ -140,7 +140,7 @@ export const ContactCard: React.FC<ContactCardProps> = ({ onSubmit }) => {
           borderRadius: 2,
           padding: 3,
           marginBottom: 3,
-          backgroundColor: "#f5f5f5",
+          backgroundColor: "white",
         }}
       >
         <Typography variant="body1">
